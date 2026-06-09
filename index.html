@@ -1627,7 +1627,7 @@ function renderK2() {
     if (cat === 'goldenGlove') {
       const sl = slots[0] || { pred: '', pts: null };
       const bg = hasResult && sl.pred && sl.pts !== null ? (sl.pts > 0 ? 'background:rgba(26,124,69,0.12);' : 'background:rgba(192,57,43,0.08);') : '';
-      html += '<span style="display:inline-block;padding:4px 8px;border-radius:6px;font-size:0.82rem;' + bg + (sl.pred ? '' : 'color:var(--text-muted);') + "">" + (sl.pred || '&#8211;') + '</span>';
+  html += '<span style="display:inline-block;padding:4px 8px;border-radius:6px;font-size:0.82rem;' + bg + (sl.pred ? '' : 'color:var(--text-muted);') + '\">' + (sl.pred || '&#8211;') + '</span>';
       if (hasResult && sl.pred && sl.pts !== null) html += '<div style="font-size:0.65rem;font-weight:600;color:' + (sl.pts > 0 ? '#1a7c45' : '#c0392b') + ';">' + (sl.pts > 0 ? '+' + sl.pts + ' pt' : '&#10007;') + '</div>';
     } else {
       const preds = Array.isArray(K2_PREDS[player][cat]) ? K2_PREDS[player][cat] : [K2_PREDS[player][cat] || '', '', ''];
