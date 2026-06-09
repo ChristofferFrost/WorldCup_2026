@@ -1133,23 +1133,49 @@ MATCHES.forEach(m => {
 
 // ======= STATE =======
 let RESULTS = {};
+// Optional: hardcoded shared score predictions so everyone sees the same picks when
+// the site is published. Edit `HARD_PREDICTIONS` below to set per-match scores.
+// Format (one entry per match id):
+//   player: { 1: { s1: '2', s2: '0' }, 2: { s1: '1', s2: '1' }, ... }
+// Example (fill in all 72 matches or only the ones you want):
+const HARD_PREDICTIONS = {
+  frost: {
+    /* Example entries: replace or add your own predictions in this object */
+    1: { s1: '2', s2: '0' },
+    2: { s1: '2', s2: '0' },
+    3: { s1: '1', s2: '1' },
+    // ... add matchId: { s1:'N', s2:'M' } up to 72
+  },
+  viggo: {
+    // Paste Viggo's per-match scores here if you want them hardcoded
+  },
+  oscar: {
+    // Paste Oscar's per-match scores here if you want them hardcoded
+  }
+};
+
 let SCORE_PREDS = { frost: {}, viggo: {}, oscar: {} };
 let activeGroup = 'all';
 let predFilter = 'all';
 
 let K2_PREDS = {
-  frost:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  frost:  { topScorer: ['Ronaldo','Messi','Mbappe'], topAssist: ['','',''], goldenGlove: '' },
   viggo:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
   oscar:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
 };
-let K2_RESULTS = { scorers: ['','',''], assists: ['','',''], goldenGlove: '' };
+let K2_RESULTS = { scorers: ['Messi','Ronaldo','Mbappe'], assists: ['','',''], goldenGlove: '' };
 
 function loadFromStorage() {
   try {
     const r = localStorage.getItem('wcup2026_results');
     if (r) RESULTS = JSON.parse(r);
     const sp = localStorage.getItem('wcup2026_score_preds');
-    if (sp) SCORE_PREDS = JSON.parse(sp);
+    if (sp) {
+      SCORE_PREDS = JSON.parse(sp);
+    } else {
+      // No saved predictions in browser: use HARD_PREDICTIONS so published site shows shared picks
+      SCORE_PREDS = JSON.parse(JSON.stringify(HARD_PREDICTIONS || {}));
+    }
     const k2p = localStorage.getItem('wcup2026_k2_preds');
     if (k2p) K2_PREDS = JSON.parse(k2p);
     const k2r = localStorage.getItem('wcup2026_k2_results');
