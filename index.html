@@ -29,6 +29,18 @@
     --frost-bg: #e8f5ee;
     --viggo-bg: #e6edf8;
     --oscar-bg: #f0e8f5;
+    --axel: #2a9d8f;
+    --axel-bg: #e8f9f6;
+    --alma: #f08a5d;
+    --alma-bg: #fff3ea;
+    --flemming: #8d3df0;
+    --flemming-bg: #f3edff;
+    --samuel: #d42f6a;
+    --samuel-bg: #fdeef4;
+    --helms: #2b6cff;
+    --helms-bg: #eaf2ff;
+    --lygum: #00a896;
+    --lygum-bg: #e8fbf9;
   }
 
   body {
@@ -287,6 +299,12 @@
   .pred-frost { background: var(--frost-bg); color: var(--frost); }
   .pred-viggo { background: var(--viggo-bg); color: var(--viggo); }
   .pred-oscar { background: var(--oscar-bg); color: var(--oscar); }
+  .pred-axel { background: var(--axel-bg); color: var(--axel); }
+  .pred-alma { background: var(--alma-bg); color: var(--alma); }
+  .pred-flemming { background: var(--flemming-bg); color: var(--flemming); }
+  .pred-samuel { background: var(--samuel-bg); color: var(--samuel); }
+  .pred-helms { background: var(--helms-bg); color: var(--helms); }
+  .pred-lygum { background: var(--lygum-bg); color: var(--lygum); }
   .pred-label { font-size: 0.68rem; font-weight: 300; opacity: 0.7; display: block; margin-bottom: 1px; }
   .pred-col {
     display: flex;
@@ -690,7 +708,7 @@
     </div>
     <div class="header-badge">⚽ Group Stage Starts Jun 11</div>
   </div>
-  <div class="scoreboard" style="margin-top: 1.5rem; border-radius: 10px; gap: 0; grid-template-columns: 1fr auto 1fr auto 1fr;">
+  <div class="scoreboard" style="margin-top: 1.5rem; border-radius: 10px; gap: 0; grid-template-columns: repeat(9, 1fr);">
     <div class="player-score">
       <div class="player-name">Frost</div>
       <div class="player-pts"><span id="frost-total">0</span><span class="pts-label">pts</span></div>
@@ -699,22 +717,68 @@
         <span class="score-pill" id="frost-wdl">0 1X2</span>
       </div>
     </div>
-    <div class="vs-divider">·</div>
-    <div class="player-score" style="align-items:center; text-align:center;">
+    <div class="player-score">
       <div class="player-name">Viggo</div>
       <div class="player-pts"><span id="viggo-total">0</span><span class="pts-label">pts</span></div>
-      <div class="score-breakdown" style="justify-content: center;">
+      <div class="score-breakdown">
         <span class="score-pill" id="viggo-correct">0 eksakte</span>
         <span class="score-pill" id="viggo-wdl">0 1X2</span>
       </div>
     </div>
-    <div class="vs-divider">·</div>
-    <div class="player-score right">
+    <div class="player-score">
       <div class="player-name">Oscar</div>
       <div class="player-pts"><span id="oscar-total">0</span><span class="pts-label">pts</span></div>
-      <div class="score-breakdown" style="justify-content: flex-end;">
+      <div class="score-breakdown">
         <span class="score-pill" id="oscar-correct">0 eksakte</span>
         <span class="score-pill" id="oscar-wdl">0 1X2</span>
+      </div>
+    </div>
+    <div class="player-score">
+      <div class="player-name">Axel</div>
+      <div class="player-pts"><span id="axel-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="axel-correct">0 eksakte</span>
+        <span class="score-pill" id="axel-wdl">0 1X2</span>
+      </div>
+    </div>
+    <div class="player-score">
+      <div class="player-name">Alma</div>
+      <div class="player-pts"><span id="alma-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="alma-correct">0 eksakte</span>
+        <span class="score-pill" id="alma-wdl">0 1X2</span>
+      </div>
+    </div>
+    <div class="player-score">
+      <div class="player-name">Flemming</div>
+      <div class="player-pts"><span id="flemming-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="flemming-correct">0 eksakte</span>
+        <span class="score-pill" id="flemming-wdl">0 1X2</span>
+      </div>
+    </div>
+    <div class="player-score">
+      <div class="player-name">Samuel</div>
+      <div class="player-pts"><span id="samuel-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="samuel-correct">0 eksakte</span>
+        <span class="score-pill" id="samuel-wdl">0 1X2</span>
+      </div>
+    </div>
+    <div class="player-score">
+      <div class="player-name">Helms</div>
+      <div class="player-pts"><span id="helms-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="helms-correct">0 eksakte</span>
+        <span class="score-pill" id="helms-wdl">0 1X2</span>
+      </div>
+    </div>
+    <div class="player-score">
+      <div class="player-name">Lygum</div>
+      <div class="player-pts"><span id="lygum-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="lygum-correct">0 eksakte</span>
+        <span class="score-pill" id="lygum-wdl">0 1X2</span>
       </div>
     </div>
   </div>
@@ -777,6 +841,12 @@
       <span class="legend-item"><span class="legend-dot" style="background:#1a7c45"></span> Frost</span>
       <span class="legend-item"><span class="legend-dot" style="background:#1a4c8c"></span> Viggo</span>
       <span class="legend-item"><span class="legend-dot" style="background:#6a1a8c"></span> Oscar</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#2a9d8f"></span> Axel</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f08a5d"></span> Alma</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#8d3df0"></span> Flemming</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#d42f6a"></span> Samuel</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#2b6cff"></span> Helms</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#00a896"></span> Lygum</span>
     </div>
     <div style="position: relative; height: 280px;">
       <canvas id="progressChart" role="img" aria-label="Linjediagram over Frost, Viggo og Oscars kumulative point over tid">Ingen data endnu.</canvas>
@@ -859,20 +929,19 @@
     <div class="enter-title">Indlæs bud</div>
     <div style="margin-bottom:1rem;">
       <label style="font-size:0.88rem;font-weight:500;margin-right:10px;">Spiller:</label>
+    </div>
       <select id="k2-player" onchange="renderK2Entry()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
-        <option value="frost">Frost</option>
-        <option value="viggo">Viggo</option>
-        <option value="oscar">Oscar</option>
+        <!-- Options populated on init -->
       </select>
     </div>
     <div id="k2-pred-form"></div>
     <button class="save-btn" onclick="saveK2Preds()" style="margin-top:1rem;">💾 Gem bud</button>
   </div>
-  <div class="enter-card">
+  <!-- <div class="enter-card">
     <div class="enter-title">Officielle resultater</div>
     <div id="k2-results-form"></div>
     <button class="save-btn" onclick="saveK2Results()" style="margin-top:1rem;">💾 Gem resultater</button>
-  </div>
+  </div> -->
 </div>
 
 </main>
@@ -1032,12 +1101,9 @@ const MATCHES = [
 ];
 
 // Predictions: which team each person predicted to win each match
-// Based on the spreadsheet data - both have same group stage winner predictions
-// Frost, Viggo and Oscar share same base group winner picks
+// Based on the spreadsheet data - all players start from the same base winner picks
 const PREDICTIONS = {
-  frost: {}, // matchId -> predicted winning team (or 'draw')
-  viggo: {},
-  oscar: {}
+  frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {}
 };
 
 // From the spreadsheet: the "winner" column (team name) for each match
@@ -1065,9 +1131,23 @@ const VIGGO_DIFFS = {};
 const OSCAR_DIFFS = {};
 
 MATCHES.forEach(m => {
+  // Initialize each player's base winner prediction for the match
   PREDICTIONS.frost[m.id] = FROST_DIFFS[m.id] || BASE_PREDS[m.id] || m.team1;
   PREDICTIONS.viggo[m.id] = VIGGO_DIFFS[m.id] || BASE_PREDS[m.id] || m.team1;
   PREDICTIONS.oscar[m.id] = OSCAR_DIFFS[m.id] || BASE_PREDS[m.id] || m.team1;
+  // New players: default to BASE_PREDS unless you want to provide diffs
+  PREDICTIONS.axel = PREDICTIONS.axel || {};
+  PREDICTIONS.alma = PREDICTIONS.alma || {};
+  PREDICTIONS.flemming = PREDICTIONS.flemming || {};
+  PREDICTIONS.samuel = PREDICTIONS.samuel || {};
+  PREDICTIONS.helms = PREDICTIONS.helms || {};
+  PREDICTIONS.lygum = PREDICTIONS.lygum || {};
+  PREDICTIONS.axel[m.id] = BASE_PREDS[m.id] || m.team1;
+  PREDICTIONS.alma[m.id] = BASE_PREDS[m.id] || m.team1;
+  PREDICTIONS.flemming[m.id] = BASE_PREDS[m.id] || m.team1;
+  PREDICTIONS.samuel[m.id] = BASE_PREDS[m.id] || m.team1;
+  PREDICTIONS.helms[m.id] = BASE_PREDS[m.id] || m.team1;
+  PREDICTIONS.lygum[m.id] = BASE_PREDS[m.id] || m.team1;
 });
 
 // ======= STATE =======
@@ -1155,23 +1235,618 @@ const HARD_PREDICTIONS = {
     // ... add matchId: { s1:'N', s2:'M' } up to 72
   },
   viggo: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
     // Paste Viggo's per-match scores here if you want them hardcoded
   },
   oscar: {
     // Paste Oscar's per-match scores here if you want them hardcoded
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
   }
+  ,
+  axel: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
+  },
+  alma: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
+  },
+  flemming: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
+  },
+  samuel: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
+  },
+  helms: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
+  },
+  lygum: {
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+    22: { s1: '', s2: '' },
+    23: { s1: '', s2: '' },
+    24: { s1: '', s2: '' },
+    25: { s1: '', s2: '' },
+    26: { s1: '', s2: '' },
+    27: { s1: '', s2: '' },
+    28: { s1: '', s2: '' },
+    29: { s1: '', s2: '' },
+    30: { s1: '', s2: '' },
+    31: { s1: '', s2: '' },
+    32: { s1: '', s2: '' },
+    33: { s1: '', s2: '' },
+    34: { s1: '', s2: '' },
+    35: { s1: '', s2: '' },
+    36: { s1: '', s2: '' },
+    37: { s1: '', s2: '' },
+    38: { s1: '', s2: '' },
+    39: { s1: '', s2: '' },
+    40: { s1: '', s2: '' },
+    41: { s1: '', s2: '' },
+    42: { s1: '', s2: '' },
+    43: { s1: '', s2: '' },
+    44: { s1: '', s2: '' },
+    45: { s1: '', s2: '' },
+    46: { s1: '', s2: '' },
+    47: { s1: '', s2: '' },
+    48: { s1: '', s2: '' },
+    49: { s1: '', s2: '' },
+    50: { s1: '', s2: '' },
+    51: { s1: '', s2: '' },
+    52: { s1: '', s2: '' },
+    53: { s1: '', s2: '' },
+    54: { s1: '', s2: '' },
+    55: { s1: '', s2: '' },
+    56: { s1: '', s2: '' },
+    57: { s1: '', s2: '' },
+    58: { s1: '', s2: '' },
+    59: { s1: '', s2: '' },
+    60: { s1: '', s2: '' },
+    61: { s1: '', s2: '' },
+    62: { s1: '', s2: '' },
+    63: { s1: '', s2: '' },
+    64: { s1: '', s2: '' },
+    65: { s1: '', s2: '' },
+    66: { s1: '', s2: '' },
+    67: { s1: '', s2: '' },
+    68: { s1: '', s2: '' },
+    69: { s1: '', s2: '' },
+    70: { s1: '', s2: '' },
+    71: { s1: '', s2: '' },
+    72: { s1: '', s2: '' },
+  },
 };
 
-let SCORE_PREDS = { frost: {}, viggo: {}, oscar: {} };
+let SCORE_PREDS = { frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {} };
 let activeGroup = 'all';
 let predFilter = 'all';
 
 let K2_PREDS = {
-  frost:  { topScorer: ['Ronaldo','Messi','Mbappe'], topAssist: ['','',''], goldenGlove: '' },
+  frost:  { topScorer: ['Mbappe','Ozarzabal','Kane'], topAssist: ['Bruno Fernandes','Yamal','Messi'], goldenGlove: 'David Raya' },
   viggo:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
   oscar:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  axel:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  alma:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  flemming:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  samuel:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  helms:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  lygum:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
 };
-let K2_RESULTS = { scorers: ['Messi','Ronaldo','Mbappe'], assists: ['','',''], goldenGlove: '' };
+let K2_RESULTS = { scorers: ['benzema','Ronaldo','Mbappe'], assists: ['','',''], goldenGlove: '' };
 
 function loadFromStorage() {
   try {
@@ -1214,7 +1889,8 @@ function saveToStorage() {
 
 // ======= SCORING =======
 const PTS = { exact: 3, wdl: 1, r32: 2, r16: 3, qf: 4, sf: 5, final: 8, winner: 10 };
-const PLAYERS = ['frost', 'viggo', 'oscar'];
+// Add new players here (identifiers used in storage and keys)
+const PLAYERS = ['frost', 'viggo', 'oscar', 'axel', 'alma', 'flemming', 'samuel', 'helms', 'lygum'];
 
 function scoreMatch(result, prediction) {
   if (!result || result.s1 === '' || result.s2 === '') return 0;
@@ -1248,9 +1924,10 @@ function getPredictedOutcome(player, matchId) {
 }
 
 function calcTotals() {
-  const totals = { frost: 0, viggo: 0, oscar: 0 };
-  const exact = { frost: 0, viggo: 0, oscar: 0 };
-  const wdl = { frost: 0, viggo: 0, oscar: 0 };
+  const totals = {};
+  const exact = {};
+  const wdl = {};
+  PLAYERS.forEach(p => { totals[p] = 0; exact[p] = 0; wdl[p] = 0; });
 
   MATCHES.forEach(m => {
     const r = RESULTS[m.id];
@@ -1326,11 +2003,9 @@ function renderMatches() {
         const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
         return (sc.s1 !== undefined && sc.s1 !== '') ? `${sc.s1}–${sc.s2}` : PREDICTIONS[p][m.id];
       };
-      const fSc = (SCORE_PREDS.frost && SCORE_PREDS.frost[m.id]) || {};
-      const vSc = (SCORE_PREDS.viggo && SCORE_PREDS.viggo[m.id]) || {};
-      const oSc = (SCORE_PREDS.oscar && SCORE_PREDS.oscar[m.id]) || {};
-      const allSame = PLAYERS.every(p => PREDICTIONS[p][m.id] === PREDICTIONS.frost[m.id]) &&
-        [fSc, vSc, oSc].every(s => s.s1 === fSc.s1 && s.s2 === fSc.s2);
+      const displays = PLAYERS.map(p => getDisplay(p));
+      const firstDisp = displays[0];
+      const allSame = PLAYERS.every((p, idx) => displays[idx] === firstDisp);
       const row = document.createElement('div');
       row.className = 'match-row';
       row.innerHTML = `
@@ -1343,18 +2018,12 @@ function renderMatches() {
         </div>
         <div class="team-name">${m.team2}</div>
         <div class="preds-wrapper">
-          <div class="pred-col" style="min-width:70px;">
-            <span class="pred-label">Frost</span>
-            <span class="pred-box pred-frost">${getDisplay('frost')}</span>
-          </div>
-          <div class="pred-col" style="min-width:70px;">
-            <span class="pred-label">Viggo</span>
-            <span class="pred-box pred-viggo">${getDisplay('viggo')}</span>
-          </div>
-          <div class="pred-col" style="min-width:70px;">
-            <span class="pred-label">Oscar</span>
-            <span class="pred-box pred-oscar">${getDisplay('oscar')}</span>
-          </div>
+          ${PLAYERS.map(p => `
+            <div class="pred-col" style="min-width:70px;">
+              <span class="pred-label">${(p.charAt(0).toUpperCase()+p.slice(1))}</span>
+              <span class="pred-box pred-${p}">${getDisplay(p)}</span>
+            </div>
+          `).join('')}
         </div>
         <div class="match-date">${m.date.slice(5)}</div>
       `;
@@ -1416,6 +2085,11 @@ function renderKnockout() {
       const hasResult = r && r.s1 !== '';
       const card = document.createElement('div');
       card.className = 'knockout-card';
+      // Build per-player predictions dynamically
+      const predsHtml = PLAYERS.map(p => {
+        const display = p.charAt(0).toUpperCase() + p.slice(1);
+        return `<div class="ko-pred pred-${p}"><span>${display}</span><span>${r&&r[p]?r[p]:'TBD'}</span></div>`;
+      }).join('');
       card.innerHTML = `
         <div class="knockout-header">Kamp ${m.ko}</div>
         <div class="knockout-body">
@@ -1423,11 +2097,7 @@ function renderKnockout() {
             <span style="font-size:0.82rem;">${m.teams}</span>
           </div>
           <div class="ko-result" style="${hasResult?'background:#0f4a28;color:white':''}">${hasResult?(r.s1+' : '+r.s2):'–'}</div>
-          <div class="ko-preds">
-            <div class="ko-pred pred-frost"><span>Frost</span><span>${r&&r.frost?r.frost:'TBD'}</span></div>
-            <div class="ko-pred pred-viggo"><span>Viggo</span><span>${r&&r.viggo?r.viggo:'TBD'}</span></div>
-            <div class="ko-pred pred-oscar"><span>Oscar</span><span>${r&&r.oscar?r.oscar:'TBD'}</span></div>
-          </div>
+          <div class="ko-preds">${predsHtml}</div>
         </div>
       `;
       grid.appendChild(card);
@@ -1538,7 +2208,7 @@ function savePredictions() {
   saveToStorage();
   calcTotals();
   renderMatches();
-  const PLAYER_NAMES = { frost: 'Frost', viggo: 'Viggo', oscar: 'Oscar' };
+  const PLAYER_NAMES = { frost: 'Frost', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum' };
   alert('✅ Bud gemt for ' + (PLAYER_NAMES[player] || player) + '!');
 }
 
@@ -1548,9 +2218,9 @@ let groupChartInstance = null;
 
 function renderCharts() {
   // Progress chart
-  const chartData = { frost: [], viggo: [], oscar: [] };
+  const chartData = { frost: [], viggo: [], oscar: [], axel: [], alma: [], flemming: [], samuel: [], helms: [], lygum: [] };
   const labels = [];
-  const sums = { frost: 0, viggo: 0, oscar: 0 };
+  const sums = { frost: 0, viggo: 0, oscar: 0, axel: 0, alma: 0, flemming: 0, samuel: 0, helms: 0, lygum: 0 };
 
   MATCHES.forEach((m, i) => {
     const r = RESULTS[m.id];
@@ -1608,15 +2278,14 @@ function renderCharts() {
 
   if (groupChartInstance) groupChartInstance.destroy();
   const ctx2 = document.getElementById('groupChart').getContext('2d');
+  // Build datasets dynamically for all players so new players are included
+  const colorMap = { frost:'#1a7c45', viggo:'#1a4c8c', oscar:'#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896' };
+  const datasets = PLAYERS.map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), data: groupPts[p], backgroundColor: colorMap[p] || '#999' }));
   groupChartInstance = new Chart(ctx2, {
     type: 'bar',
     data: {
       labels: groupLabels,
-      datasets: [
-        { label: 'Frost', data: groupPts.frost, backgroundColor: 'rgba(26,124,69,0.75)' },
-        { label: 'Viggo', data: groupPts.viggo, backgroundColor: 'rgba(26,76,140,0.75)' },
-        { label: 'Oscar', data: groupPts.oscar, backgroundColor: 'rgba(106,26,140,0.75)' },
-      ]
+      datasets: datasets
     },
     options: {
       responsive: true, maintainAspectRatio: false,
@@ -1630,8 +2299,8 @@ function renderCharts() {
 function renderK2() {
   const cont = document.getElementById('k2-content');
   if (!cont) return;
-  const COLORS = { frost: '#1a7c45', viggo: '#1a4c8c', oscar: '#6a1a8c' };
-  const NAMES  = { frost: 'FROST',   viggo: 'VIGGO',   oscar: 'OSCAR'   };
+  const COLORS = { frost: '#1a7c45', viggo: '#1a4c8c', oscar: '#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896' };
+  const NAMES  = { frost: 'FROST', viggo: 'VIGGO', oscar: 'OSCAR', axel:'AXEL', alma:'ALMA', flemming:'FLEMMING', samuel:'SAMUEL', helms:'HELMS', lygum:'LYGUM' };
 
   // Returns { total, slots: [{pred, pts}] } for scorer/assist, or { total, slots } for goldenGlove
   function getScore(player, cat) {
@@ -1795,7 +2464,7 @@ function saveK2Preds() {
   };
   saveToStorage();
   renderK2();
-  const PNAMES = { frost:'Frost', viggo:'Viggo', oscar:'Oscar' };
+  const PNAMES = { frost:'Frost', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum' };
   alert('\u2705 K2 bud gemt for ' + (PNAMES[player] || player) + '!');
 }
 
@@ -1825,6 +2494,23 @@ renderMatches();
 renderKnockout();
 renderK2();
 renderK2();
+
+// Populate dynamic selects
+function populateK2PlayerSelect() {
+  const sel = document.getElementById('k2-player');
+  if (!sel) return;
+  sel.innerHTML = '';
+  const PN = { frost:'Frost', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum' };
+  PLAYERS.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p;
+    opt.textContent = PN[p] || p;
+    sel.appendChild(opt);
+  });
+}
+
+populateK2PlayerSelect();
+renderK2Entry();
 </script>
 </body>
 </html>
