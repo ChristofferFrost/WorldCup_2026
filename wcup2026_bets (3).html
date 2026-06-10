@@ -1587,7 +1587,7 @@ function renderK2() {
 
   // Returns { total, slots: [{pred, pts}] } for scorer/assist, or { total, slots } for goldenGlove
   function getScore(player, cat) {
-    const pred = K2_PREDS[player][cat];
+    const pred = (K2_PREDS[player] || {})[cat];
     if (cat === 'goldenGlove') {
       if (!K2_RESULTS.goldenGlove) return null;
       const hit = pred && pred === K2_RESULTS.goldenGlove;
@@ -1595,7 +1595,7 @@ function renderK2() {
     }
     const results = cat === 'topScorer' ? K2_RESULTS.scorers : K2_RESULTS.assists;
     if (!results[0]) return null; // no official results yet
-    const preds = Array.isArray(pred) ? pred : [pred || '', '', ''];
+  const preds = Array.isArray(pred) ? pred : [pred || '', '', ''];
     const slots = preds.map((name, i) => {
       if (!name) return { pred: '', pts: null };
       if (name === results[i]) return { pred: name, pts: 5 }; // exact position
@@ -1630,7 +1630,8 @@ function renderK2() {
       html += '<span style="display:inline-block;padding:4px 8px;border-radius:6px;font-size:0.82rem;' + bg + (sl.pred ? '' : 'color:var(--text-muted);') + '">' + (sl.pred || '&#8211;') + '</span>';
       if (hasResult && sl.pred && sl.pts !== null) html += '<div style="font-size:0.65rem;font-weight:600;color:' + (sl.pts > 0 ? '#1a7c45' : '#c0392b') + ';">' + (sl.pts > 0 ? '+' + sl.pts + ' pt' : '&#10007;') + '</div>';
     } else {
-      const preds = Array.isArray(K2_PREDS[player][cat]) ? K2_PREDS[player][cat] : [K2_PREDS[player][cat] || '', '', ''];
+      const playerPred = K2_PREDS[player] || {};
+      const preds = Array.isArray(playerPred[cat]) ? playerPred[cat] : [playerPred[cat] || '', '', ''];
       preds.forEach((name, i) => {
         const sl = slots[i] || { pred: name, pts: null };
         const bg = hasResult && name && sl.pts !== null ? (sl.pts > 0 ? 'background:rgba(26,124,69,0.12);' : 'background:rgba(192,57,43,0.08);') : '';

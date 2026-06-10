@@ -723,12 +723,10 @@
 <nav class="nav">
   <button class="nav-btn active" onclick="showSection('results', this)">Resultater</button>
   <button class="nav-btn" onclick="showSection('knockout', this)">Knockout</button>
-  <button class="nav-btn" onclick="showProtectedSection('enter', this)">🔒 Indlæs resultater</button>
-  <button class="nav-btn" onclick="showProtectedSection('pred-entry', this)">🔒 Indlæs bud</button>
   <button class="nav-btn" onclick="showSection('chart-section', this)">Grafik</button>
   <button class="nav-btn" onclick="showSection('rules', this)">Regler</button>
   <button class="nav-btn" onclick="showSection('k2', this)">Konkurrence 2</button>
-  <button class="nav-btn" onclick="showProtectedSection('k2-entry', this)">🔒 K2 Admin</button>
+  <!-- Admin buttons removed: results/pred-entry/k2-entry are hardcoded -->
 </nav>
 
 <!-- LOCK OVERLAY -->
@@ -765,66 +763,7 @@
   <div id="knockout-container"></div>
 </div>
 
-<!-- ENTER RESULTS SECTION -->
-<div id="enter" class="section">
-  <div class="section-header">
-    <h2>Indlæs resultater</h2>
-    <p>Opdater kampe manuelt — resultaterne gemmes i browseren</p>
-  </div>
-  <div class="info-banner">
-    ⚡ Resultater gemmes i din browser (localStorage). Du skal opdatere manuelt efter hver kamp eller brug et API. Se afsnittet nedenfor om automatisk opdatering.
-  </div>
-  <div class="enter-card">
-    <div class="enter-title">Vælg kamp</div>
-    <div style="margin-bottom: 1rem;">
-      <label style="font-size:0.82rem; color: var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase; font-weight:500;">Filtrer efter gruppe</label>
-      <select id="enter-group-filter" onchange="renderEnterSection()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
-        <option value="all">Alle grupper</option>
-      </select>
-    </div>
-    <div id="enter-matches"></div>
-    <button class="save-btn" onclick="saveResults()">💾 Gem resultater</button>
-  </div>
-  <div class="enter-card" style="border-color: var(--green); background: var(--green-light);">
-    <div class="enter-title" style="color: var(--green-dark);">🔄 Automatisk opdatering</div>
-    <p style="font-size: 0.88rem; line-height: 1.6; color: #1a4a2a;">
-      Websitet kan <strong>ikke</strong> hente live resultater automatisk, da det kræver en server og et API-abonnement (f.eks. football-data.org eller API-Football). 
-      <br><br>
-      <strong>Alternativ:</strong> Del denne HTML-fil med dine venner og lad én person indlæse resultater efter hver kamp. Resultaterne gemmes i <em>localStorage</em>, så de huskes næste gang I åbner filen.
-      <br><br>
-      Vil du have en version med live-opdatering? Så skal filen hostes på en server med adgang til et fodbold-API — kontakt udvikleren.
-    </p>
-  </div>
-</div>
 
-<!-- PREDICTION ENTRY SECTION -->
-<div id="pred-entry" class="section">
-  <div class="section-header">
-    <h2>Indlæs bud</h2>
-    <p>Angiv forudsagte cifferresultater for Frost, Viggo og Oscar</p>
-  </div>
-  <div class="enter-card">
-    <div class="enter-title">Vælg spiller &amp; gruppe</div>
-    <div style="display:flex; gap:12px; margin-bottom:1rem; flex-wrap:wrap;">
-      <div>
-        <label style="font-size:0.82rem; color: var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase; font-weight:500;">Spiller</label>
-        <select id="pred-player" onchange="renderPredEntry()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
-          <option value="frost">Frost</option>
-          <option value="viggo">Viggo</option>
-          <option value="oscar">Oscar</option>
-        </select>
-      </div>
-      <div>
-        <label style="font-size:0.82rem; color: var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase; font-weight:500;">Gruppe</label>
-        <select id="pred-group-filter" onchange="renderPredEntry()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
-          <option value="all">Alle grupper</option>
-        </select>
-      </div>
-    </div>
-    <div id="pred-entry-matches"></div>
-    <button class="save-btn" onclick="savePredictions()">💾 Gem bud</button>
-  </div>
-</div>
 
 <!-- CHART SECTION -->
 <div id="chart-section" class="section">
@@ -1141,9 +1080,28 @@ let RESULTS = {};
 const HARD_PREDICTIONS = {
   frost: {
     /* Example entries: replace or add your own predictions in this object */
-    1: { s1: '2', s2: '0' },
-    2: { s1: '2', s2: '0' },
-    3: { s1: '1', s2: '1' },
+    1: { s1: '', s2: '' },
+    2: { s1: '', s2: '' },
+    3: { s1: '', s2: '' },//make them up to 72 matches
+    4: { s1: '', s2: '' },
+    5: { s1: '', s2: '' },
+    6: { s1: '', s2: '' },
+    7: { s1: '', s2: '' },
+    8: { s1: '', s2: '' },
+    9: { s1: '', s2: '' },
+    10: { s1: '', s2: '' },
+    11: { s1: '', s2: '' },
+    12: { s1: '', s2: '' },
+    13: { s1: '', s2: '' },
+    14: { s1: '', s2: '' },
+    15: { s1: '', s2: '' },
+    16: { s1: '', s2: '' },
+    17: { s1: '', s2: '' },
+    18: { s1: '', s2: '' },
+    19: { s1: '', s2: '' },
+    20: { s1: '', s2: '' },
+    21: { s1: '', s2: '' },
+
     // ... add matchId: { s1:'N', s2:'M' } up to 72
   },
   viggo: {
@@ -1177,9 +1135,23 @@ function loadFromStorage() {
       SCORE_PREDS = JSON.parse(JSON.stringify(HARD_PREDICTIONS || {}));
     }
     const k2p = localStorage.getItem('wcup2026_k2_preds');
-    if (k2p) K2_PREDS = JSON.parse(k2p);
+    if (k2p) {
+      try {
+        const parsed = JSON.parse(k2p) || {};
+        Object.keys(K2_PREDS).forEach(player => {
+          K2_PREDS[player] = Object.assign({}, K2_PREDS[player] || {}, parsed[player] || {});
+        });
+      } catch(e) { /* ignore parse errors */ }
+    }
     const k2r = localStorage.getItem('wcup2026_k2_results');
-    if (k2r) K2_RESULTS = JSON.parse(k2r);
+    if (k2r) {
+      try {
+        const parsedR = JSON.parse(k2r) || {};
+        K2_RESULTS.scorers = (parsedR.scorers && parsedR.scorers.length) ? parsedR.scorers.slice(0,3).map(s=>s||'') : K2_RESULTS.scorers;
+        K2_RESULTS.assists = (parsedR.assists && parsedR.assists.length) ? parsedR.assists.slice(0,3).map(s=>s||'') : K2_RESULTS.assists;
+        K2_RESULTS.goldenGlove = parsedR.goldenGlove || K2_RESULTS.goldenGlove;
+      } catch(e) { /* ignore parse errors */ }
+    }
   } catch(e) {}
 }
 
@@ -1613,7 +1585,7 @@ function renderK2() {
 
   // Returns { total, slots: [{pred, pts}] } for scorer/assist, or { total, slots } for goldenGlove
   function getScore(player, cat) {
-    const pred = K2_PREDS[player][cat];
+    const pred = (K2_PREDS[player] || {})[cat];
     if (cat === 'goldenGlove') {
       if (!K2_RESULTS.goldenGlove) return null;
       const hit = pred && pred === K2_RESULTS.goldenGlove;
@@ -1621,7 +1593,7 @@ function renderK2() {
     }
     const results = cat === 'topScorer' ? K2_RESULTS.scorers : K2_RESULTS.assists;
     if (!results[0]) return null; // no official results yet
-    const preds = Array.isArray(pred) ? pred : [pred || '', '', ''];
+  const preds = Array.isArray(pred) ? pred : [pred || '', '', ''];
     const slots = preds.map((name, i) => {
       if (!name) return { pred: '', pts: null };
       if (name === results[i]) return { pred: name, pts: 5 }; // exact position
@@ -1656,7 +1628,8 @@ function renderK2() {
   html += '<span style="display:inline-block;padding:4px 8px;border-radius:6px;font-size:0.82rem;' + bg + (sl.pred ? '' : 'color:var(--text-muted);') + '\">' + (sl.pred || '&#8211;') + '</span>';
       if (hasResult && sl.pred && sl.pts !== null) html += '<div style="font-size:0.65rem;font-weight:600;color:' + (sl.pts > 0 ? '#1a7c45' : '#c0392b') + ';">' + (sl.pts > 0 ? '+' + sl.pts + ' pt' : '&#10007;') + '</div>';
     } else {
-      const preds = Array.isArray(K2_PREDS[player][cat]) ? K2_PREDS[player][cat] : [K2_PREDS[player][cat] || '', '', ''];
+      const playerPred = K2_PREDS[player] || {};
+      const preds = Array.isArray(playerPred[cat]) ? playerPred[cat] : [playerPred[cat] || '', '', ''];
       preds.forEach((name, i) => {
         const sl = slots[i] || { pred: name, pts: null };
         const bg = hasResult && name && sl.pts !== null ? (sl.pts > 0 ? 'background:rgba(26,124,69,0.12);' : 'background:rgba(192,57,43,0.08);') : '';
@@ -1800,10 +1773,8 @@ loadFromStorage();
 calcTotals();
 renderMatches();
 renderKnockout();
-renderEnterSection();
-renderPredEntry();
 renderK2();
-renderK2Entry();
+renderK2();
 </script>
 </body>
 </html>
