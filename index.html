@@ -723,11 +723,12 @@
 <nav class="nav">
   <button class="nav-btn active" onclick="showSection('results', this)">Resultater</button>
   <button class="nav-btn" onclick="showSection('knockout', this)">Knockout</button>
-  <!-- Admin UI removed (results/predictions are hardcoded) -->
+  <button class="nav-btn" onclick="showProtectedSection('enter', this)">🔒 Indlæs resultater</button>
+  <button class="nav-btn" onclick="showProtectedSection('pred-entry', this)">🔒 Indlæs bud</button>
   <button class="nav-btn" onclick="showSection('chart-section', this)">Grafik</button>
   <button class="nav-btn" onclick="showSection('rules', this)">Regler</button>
   <button class="nav-btn" onclick="showSection('k2', this)">Konkurrence 2</button>
-  <!-- K2 admin removed -->
+  <button class="nav-btn" onclick="showProtectedSection('k2-entry', this)">🔒 K2 Admin</button>
 </nav>
 
 <!-- LOCK OVERLAY -->
@@ -764,9 +765,66 @@
   <div id="knockout-container"></div>
 </div>
 
-<!-- ENTER RESULTS SECTION removed — results are hardcoded now -->
+<!-- ENTER RESULTS SECTION -->
+<div id="enter" class="section">
+  <div class="section-header">
+    <h2>Indlæs resultater</h2>
+    <p>Opdater kampe manuelt — resultaterne gemmes i browseren</p>
+  </div>
+  <div class="info-banner">
+    ⚡ Resultater gemmes i din browser (localStorage). Du skal opdatere manuelt efter hver kamp eller brug et API. Se afsnittet nedenfor om automatisk opdatering.
+  </div>
+  <div class="enter-card">
+    <div class="enter-title">Vælg kamp</div>
+    <div style="margin-bottom: 1rem;">
+      <label style="font-size:0.82rem; color: var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase; font-weight:500;">Filtrer efter gruppe</label>
+      <select id="enter-group-filter" onchange="renderEnterSection()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
+        <option value="all">Alle grupper</option>
+      </select>
+    </div>
+    <div id="enter-matches"></div>
+    <button class="save-btn" onclick="saveResults()">💾 Gem resultater</button>
+  </div>
+  <div class="enter-card" style="border-color: var(--green); background: var(--green-light);">
+    <div class="enter-title" style="color: var(--green-dark);">🔄 Automatisk opdatering</div>
+    <p style="font-size: 0.88rem; line-height: 1.6; color: #1a4a2a;">
+      Websitet kan <strong>ikke</strong> hente live resultater automatisk, da det kræver en server og et API-abonnement (f.eks. football-data.org eller API-Football). 
+      <br><br>
+      <strong>Alternativ:</strong> Del denne HTML-fil med dine venner og lad én person indlæse resultater efter hver kamp. Resultaterne gemmes i <em>localStorage</em>, så de huskes næste gang I åbner filen.
+      <br><br>
+      Vil du have en version med live-opdatering? Så skal filen hostes på en server med adgang til et fodbold-API — kontakt udvikleren.
+    </p>
+  </div>
+</div>
 
-<!-- PREDICTION ENTRY SECTION removed — predictions are hardcoded now -->
+<!-- PREDICTION ENTRY SECTION -->
+<div id="pred-entry" class="section">
+  <div class="section-header">
+    <h2>Indlæs bud</h2>
+    <p>Angiv forudsagte cifferresultater for Frost, Viggo og Oscar</p>
+  </div>
+  <div class="enter-card">
+    <div class="enter-title">Vælg spiller &amp; gruppe</div>
+    <div style="display:flex; gap:12px; margin-bottom:1rem; flex-wrap:wrap;">
+      <div>
+        <label style="font-size:0.82rem; color: var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase; font-weight:500;">Spiller</label>
+        <select id="pred-player" onchange="renderPredEntry()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
+          <option value="frost">Frost</option>
+          <option value="viggo">Viggo</option>
+          <option value="oscar">Oscar</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:0.82rem; color: var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase; font-weight:500;">Gruppe</label>
+        <select id="pred-group-filter" onchange="renderPredEntry()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
+          <option value="all">Alle grupper</option>
+        </select>
+      </div>
+    </div>
+    <div id="pred-entry-matches"></div>
+    <button class="save-btn" onclick="savePredictions()">💾 Gem bud</button>
+  </div>
+</div>
 
 <!-- CHART SECTION -->
 <div id="chart-section" class="section">
@@ -852,7 +910,31 @@
   <div id="k2-content"></div>
 </div>
 
-<!-- K2 admin UI removed — K2 predictions/results are hardcoded now -->
+<!-- K2 ADMIN SECTION -->
+<div id="k2-entry" class="section">
+  <div class="section-header">
+    <h2>K2 – Admin</h2>
+    <p>Indlæs spillernes bud og officielle slutresultater</p>
+  </div>
+  <div class="enter-card">
+    <div class="enter-title">Indlæs bud</div>
+    <div style="margin-bottom:1rem;">
+      <label style="font-size:0.88rem;font-weight:500;margin-right:10px;">Spiller:</label>
+      <select id="k2-player" onchange="renderK2Entry()" style="font-family:'DM Sans',sans-serif; font-size:0.9rem; padding:8px 12px; border:1.5px solid var(--gray-mid); border-radius:8px; background:var(--gray); color:var(--text); outline:none; cursor:pointer;">
+        <option value="frost">Frost</option>
+        <option value="viggo">Viggo</option>
+        <option value="oscar">Oscar</option>
+      </select>
+    </div>
+    <div id="k2-pred-form"></div>
+    <button class="save-btn" onclick="saveK2Preds()" style="margin-top:1rem;">💾 Gem bud</button>
+  </div>
+  <div class="enter-card">
+    <div class="enter-title">Officielle resultater</div>
+    <div id="k2-results-form"></div>
+    <button class="save-btn" onclick="saveK2Results()" style="margin-top:1rem;">💾 Gem resultater</button>
+  </div>
+</div>
 
 </main>
 
@@ -1050,23 +1132,7 @@ MATCHES.forEach(m => {
 });
 
 // ======= STATE =======
-
-const HARD_RESULTS = {
-  /* Paste official results here if you want them hardcoded for everyone */
-  1: { s1: '2', s2: '0' },
-  2: { s1: '1', s2: '1' },
-  3: { s1: '0', s2: '2' },
-  4: { s1: '2', s2: '1' },
-  5: { s1: '1', s2: '0' },
-  6: { s1: '1', s2: '1' },
-  7: { s1: '2', s2: '0' },
-  8: { s1: '1', s2: '2' },
-  9: { s1: '1', s2: '1' },
-
-};
-
-// RESULTS is initialized from HARD_RESULTS; localStorage will override when present.
-let RESULTS = JSON.parse(JSON.stringify(HARD_RESULTS || {}));
+let RESULTS = {};
 // Optional: hardcoded shared score predictions so everyone sees the same picks when
 // the site is published. Edit `HARD_PREDICTIONS` below to set per-match scores.
 // Format (one entry per match id):
@@ -1078,225 +1144,12 @@ const HARD_PREDICTIONS = {
     1: { s1: '2', s2: '0' },
     2: { s1: '2', s2: '0' },
     3: { s1: '1', s2: '1' },
-    4: { s1: '2', s2: '1' },
-    5: { s1: '1', s2: '0' },
-    6: { s1: '1', s2: '1' },
-    7: { s1: '2', s2: '0' },
-    8: { s1: '1', s2: '2' },
-    9: { s1: '1', s2: '1' },
-    10: { s1: '2', s2: '1' },
-    11: { s1: '2', s2: '1' },
-    12: { s1: '1', s2: '2' },
-    13: { s1: '2', s2: '1' },
-    14: { s1: '2', s2: '0' },
-    15: { s1: '1', s2: '1' },
-    16: { s1: '3', s2: '1' },
-    17: { s1: '2', s2: '1' },
-    18: { s1: '2', s2: '0' },
-    19: { s1: '1', s2: '1' },
-    20: { s1: '2', s2: '1' },
-    21: { s1: '1', s2: '1' },
-    22: { s1: '2', s2: '0' },
-    23: { s1: '2', s2: '1' },
-    24: { s1: '1', s2: '2' },
-    25: { s1: '2', s2: '1' },
-    26: { s1: '1', s2: '2' },
-    27: { s1: '2', s2: '1' },
-    28: { s1: '2', s2: '0' },
-    29: { s1: '1', s2: '1' },
-    30: { s1: '2', s2: '0' },
-    31: { s1: '2', s2: '1' },
-    32: { s1: '1', s2: '1' },
-    33: { s1: '2', s2: '0' },
-    34: { s1: '2', s2: '1' },
-    35: { s1: '1', s2: '1' },
-    36: { s1: '2', s2: '0' },
-    37: { s1: '2', s2: '1' },
-    38: { s1: '1', s2: '1' },
-    39: { s1: '2', s2: '0' },
-    40: { s1: '2', s2: '1' },
-    41: { s1: '1', s2: '1' },
-    42: { s1: '2', s2: '0' },
-    43: { s1: '2', s2: '1' },
-    44: { s1: '1', s2: '1' },
-    45: { s1: '2', s2: '0' },
-    46: { s1: '2', s2: '1' },
-    47: { s1: '1', s2: '1' },
-    48: { s1: '2', s2: '0' },
-    49: { s1: '1', s2: '1' },
-    50: { s1: '2', s2: '0' },
-    51: { s1: '2', s2: '1' },
-    52: { s1: '1', s2: '2' },
-    53: { s1: '1', s2: '1' },
-    54: { s1: '2', s2: '0' },
-    55: { s1: '1', s2: '1' },
-    56: { s1: '2', s2: '0' },
-    57: { s1: '2', s2: '1' },
-    58: { s1: '1', s2: '2' },
-    59: { s1: '2', s2: '0' },
-    60: { s1: '1', s2: '1' },
-    61: { s1: '2', s2: '1' },
-    62: { s1: '1', s2: '2' },
-    63: { s1: '2', s2: '0' },
-    64: { s1: '2', s2: '1' },
-    65: { s1: '1', s2: '1' },
-    66: { s1: '2', s2: '0' },
-    67: { s1: '2', s2: '1' },
-    68: { s1: '1', s2: '1' },
-    69: { s1: '2', s2: '0' },
-    70: { s1: '2', s2: '1' },
-    71: { s1: '1', s2: '1' },
-    72: { s1: '2', s2: '10' },
     // ... add matchId: { s1:'N', s2:'M' } up to 72
   },
   viggo: {
-    1: { s1: '1', s2: '0' },
-    2: { s1: '2', s2: '1' },
-    3: { s1: '3', s2: '0' },
-    4: { s1: '2', s2: '1' },
-    5: { s1: '1', s2: '2' },
-    6: { s1: '1', s2: '1' },
-    7: { s1: '2', s2: '0' },
-    8: { s1: '1', s2: '1' },
-    9: { s1: '', s2: '' },
-    10: { s1: '', s2: '' },
-    11: { s1: '', s2: '' },
-    12: { s1: '', s2: '' },
-    13: { s1: '', s2: '' },
-    14: { s1: '', s2: '' },
-    15: { s1: '', s2: '' },
-    16: { s1: '', s2: '' },
-    17: { s1: '', s2: '' },
-    18: { s1: '', s2: '' },
-    19: { s1: '', s2: '' },
-    20: { s1: '', s2: '' },
-    21: { s1: '', s2: '' },
-    22: { s1: '', s2: '' },
-    23: { s1: '', s2: '' },
-    24: { s1: '', s2: '' },
-    25: { s1: '', s2: '' },
-    26: { s1: '', s2: '' },
-    27: { s1: '', s2: '' },
-    28: { s1: '', s2: '' },
-    29: { s1: '', s2: '' },
-    30: { s1: '', s2: '' },
-    31: { s1: '', s2: '' },
-    32: { s1: '', s2: '' },
-    33: { s1: '', s2: '' },
-    34: { s1: '', s2: '' },
-    35: { s1: '', s2: '' },
-    36: { s1: '', s2: '' },
-    37: { s1: '', s2: '' },
-    38: { s1: '', s2: '' },
-    39: { s1: '', s2: '' },
-    40: { s1: '', s2: '' },
-    41: { s1: '', s2: '' },
-    42: { s1: '', s2: '' },
-    43: { s1: '', s2: '' },
-    44: { s1: '', s2: '' },
-    45: { s1: '', s2: '' },
-    46: { s1: '', s2: '' },
-    47: { s1: '', s2: '' },
-    48: { s1: '', s2: '' },
-    49: { s1: '', s2: '' },
-    50: { s1: '', s2: '' },
-    51: { s1: '', s2: '' },
-    52: { s1: '', s2: '' },
-    53: { s1: '', s2: '' },
-    54: { s1: '', s2: '' },
-    55: { s1: '', s2: '' },
-    56: { s1: '', s2: '' },
-    57: { s1: '', s2: '' },
-    58: { s1: '', s2: '' },
-    59: { s1: '', s2: '' },
-    60: { s1: '', s2: '' },
-    61: { s1: '', s2: '' },
-    62: { s1: '', s2: '' },
-    63: { s1: '', s2: '' },
-    64: { s1: '', s2: '' },
-    65: { s1: '', s2: '' },
-    66: { s1: '', s2: '' },
-    67: { s1: '', s2: '' },
-    68: { s1: '', s2: '' },
-    69: { s1: '', s2: '' },
-    70: { s1: '', s2: '' },
-    71: { s1: '', s2: '' },
-    72: { s1: '', s2: '' },
     // Paste Viggo's per-match scores here if you want them hardcoded
   },
   oscar: {
-     1: { s1: '3', s2: '2' },
-    2: { s1: '1', s2: '1' },
-    3: { s1: '3', s2: '0' },
-    4: { s1: '2', s2: '1' },
-    5: { s1: '1', s2: '2' },
-    6: { s1: '1', s2: '1' },
-    7: { s1: '2', s2: '0' },
-    8: { s1: '1', s2: '1' },
-    9: { s1: '2', s2: '0' },
-    10: { s1: '', s2: '' },
-    11: { s1: '', s2: '' },
-    12: { s1: '', s2: '' },
-    13: { s1: '', s2: '' },
-    14: { s1: '', s2: '' },
-    15: { s1: '', s2: '' },
-    16: { s1: '', s2: '' },
-    17: { s1: '', s2: '' },
-    18: { s1: '', s2: '' },
-    19: { s1: '', s2: '' },
-    20: { s1: '', s2: '' },
-    21: { s1: '', s2: '' },
-    22: { s1: '', s2: '' },
-    23: { s1: '', s2: '' },
-    24: { s1: '', s2: '' },
-    25: { s1: '', s2: '' },
-    26: { s1: '', s2: '' },
-    27: { s1: '', s2: '' },
-    28: { s1: '', s2: '' },
-    29: { s1: '', s2: '' },
-    30: { s1: '', s2: '' },
-    31: { s1: '', s2: '' },
-    32: { s1: '', s2: '' },
-    33: { s1: '', s2: '' },
-    34: { s1: '', s2: '' },
-    35: { s1: '', s2: '' },
-    36: { s1: '', s2: '' },
-    37: { s1: '', s2: '' },
-    38: { s1: '', s2: '' },
-    39: { s1: '', s2: '' },
-    40: { s1: '', s2: '' },
-    41: { s1: '', s2: '' },
-    42: { s1: '', s2: '' },
-    43: { s1: '', s2: '' },
-    44: { s1: '', s2: '' },
-    45: { s1: '', s2: '' },
-    46: { s1: '', s2: '' },
-    47: { s1: '', s2: '' },
-    48: { s1: '', s2: '' },
-    49: { s1: '', s2: '' },
-    50: { s1: '', s2: '' },
-    51: { s1: '', s2: '' },
-    52: { s1: '', s2: '' },
-    53: { s1: '', s2: '' },
-    54: { s1: '', s2: '' },
-    55: { s1: '', s2: '' },
-    56: { s1: '', s2: '' },
-    57: { s1: '', s2: '' },
-    58: { s1: '', s2: '' },
-    59: { s1: '', s2: '' },
-    60: { s1: '', s2: '' },
-    61: { s1: '', s2: '' },
-    62: { s1: '', s2: '' },
-    63: { s1: '', s2: '' },
-    64: { s1: '', s2: '' },
-    65: { s1: '', s2: '' },
-    66: { s1: '', s2: '' },
-    67: { s1: '', s2: '' },
-    68: { s1: '', s2: '' },
-    69: { s1: '', s2: '' },
-    70: { s1: '', s2: '' },
-    71: { s1: '', s2: '' },
-    72: { s1: '', s2: '' },
     // Paste Oscar's per-match scores here if you want them hardcoded
   }
 };
@@ -1311,37 +1164,6 @@ let K2_PREDS = {
   oscar:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
 };
 let K2_RESULTS = { scorers: ['Messi','Ronaldo','Mbappe'], assists: ['','',''], goldenGlove: '' };
-
-// ======= KNOCKOUT / PROGRESSION (Competition 1 part 2) =======
-// Hardcode the official teams that progressed to each knockout stage so scoring can be calculated.
-// Fill these arrays with the team names exactly as used elsewhere in the site.
-const HARD_PROG_RESULTS = {
-  r32: ['', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', '', '', '', '', '', '', ''], // 32 teams
-  r16: ['', '', '', '', '', '', '', '', '', '', '',
-        '', '', '', '', ''], // 16 teams
-  qf:  ['', '', '', '', '', '', '', ''], // 8 teams
-  sf:  ['', '', '', ''], // 4 teams
-  final: ['', ''], // 2 teams
-  winner: ''
-};
-
-// Hardcoded progression predictions for players — a template you can paste into the code.
-const HARD_PROG_PREDS = {
-  frost: {
-     r32: ['Denmark', 'Belgien', 'Tyskland'], r16: [], qf: [], sf: [], final: [], winner: ''
-  },
-  viggo: {
-    // r32: [], r16: [], qf: [], sf: [], final: [], winner: ''
-  },
-  oscar: {
-    // r32: [], r16: [], qf: [], sf: [], final: [], winner: ''
-  }
-};
-
-// Active progression predictions used for scoring. Will default to HARD_PROG_PREDS unless overwritten in localStorage.
-let PROGRESSION_PREDS = JSON.parse(JSON.stringify(HARD_PROG_PREDS || { frost: {}, viggo: {}, oscar: {} }));
 
 function loadFromStorage() {
   try {
@@ -1358,9 +1180,6 @@ function loadFromStorage() {
     if (k2p) K2_PREDS = JSON.parse(k2p);
     const k2r = localStorage.getItem('wcup2026_k2_results');
     if (k2r) K2_RESULTS = JSON.parse(k2r);
-    const pp = localStorage.getItem('wcup2026_prog_preds');
-    if (pp) PROGRESSION_PREDS = JSON.parse(pp);
-    else PROGRESSION_PREDS = JSON.parse(JSON.stringify(HARD_PROG_PREDS || {}));
   } catch(e) {}
 }
 
@@ -1369,7 +1188,6 @@ function saveToStorage() {
   localStorage.setItem('wcup2026_score_preds', JSON.stringify(SCORE_PREDS));
   localStorage.setItem('wcup2026_k2_preds', JSON.stringify(K2_PREDS));
   localStorage.setItem('wcup2026_k2_results', JSON.stringify(K2_RESULTS));
-  localStorage.setItem('wcup2026_prog_preds', JSON.stringify(PROGRESSION_PREDS));
 }
 
 // ======= SCORING =======
@@ -1433,25 +1251,6 @@ function calcTotals() {
   });
 
   PLAYERS.forEach(p => {
-    // Add progression points (competition part 2)
-    const progStages = ['r32','r16','qf','sf','final'];
-    progStages.forEach(stage => {
-      const stagePreds = (PROGRESSION_PREDS[p] && PROGRESSION_PREDS[p][stage]) || [];
-      const stageActual = (HARD_PROG_RESULTS && HARD_PROG_RESULTS[stage]) || [];
-      if (stagePreds && stageActual && Array.isArray(stagePreds)) {
-        stagePreds.forEach(team => {
-          if (!team) return;
-          // award points if team is present in actual stage list
-          if (stageActual.includes(team)) totals[p] += (PTS[stage] || 0);
-        });
-      }
-    });
-    // Winner
-    const winnerPred = (PROGRESSION_PREDS[p] && PROGRESSION_PREDS[p].winner) || '';
-    if (winnerPred && HARD_PROG_RESULTS && HARD_PROG_RESULTS.winner && winnerPred === HARD_PROG_RESULTS.winner) {
-      totals[p] += (PTS.winner || 0);
-    }
-
     document.getElementById(p+'-total').textContent = totals[p];
     document.getElementById(p+'-correct').textContent = exact[p] + ' eksakte';
     document.getElementById(p+'-wdl').textContent = wdl[p] + ' 1X2';
@@ -1582,52 +1381,7 @@ const KNOCKOUT_ROUNDS = [
 function renderKnockout() {
   const container = document.getElementById('knockout-container');
   container.innerHTML = '';
-  // If HARD_PROG_RESULTS is provided, render stage team lists so hardcoded progression is visible
-  const stageOrder = [ 'r32', 'r16', 'qf', 'sf', 'final' ];
-  const stageLabels = { r32: 'Round of 32', r16: 'Round of 16', qf: 'Kvartfinaler', sf: 'Semifinaler', final: 'Finale' };
-  const hasHardProg = HARD_PROG_RESULTS && Object.keys(HARD_PROG_RESULTS).length > 0;
-  if (hasHardProg) {
-    stageOrder.forEach(stage => {
-      const teams = HARD_PROG_RESULTS[stage] || [];
-      const section = document.createElement('div');
-      section.className = 'knockout-round';
-      section.innerHTML = `<div class="round-title">${stageLabels[stage] || stage} (${teams.length})</div>`;
-      const grid = document.createElement('div');
-      grid.className = 'knockout-grid';
-      const card = document.createElement('div');
-      card.className = 'knockout-card';
-      let inner = '<div class="knockout-body">';
-      if (!teams.length) {
-        inner += '<div style="color:var(--text-muted);padding:12px;">Ingen hardcodede hold for denne fase.</div>';
-      } else {
-        // Render teams as paired matches: teams[0] vs teams[1], teams[2] vs teams[3], ...
-        for (let i = 0; i < teams.length; i += 2) {
-          const a = teams[i] || 'TBD';
-          const b = teams[i+1] || 'TBD';
-          inner += `
-            <div style="margin-bottom:10px;padding:8px;border-radius:8px;background:var(--gray);display:flex;align-items:center;justify-content:center;gap:12px;">
-              <div style="flex:1;text-align:right;font-weight:700;">${a}</div>
-              <div style="padding:0 10px;color:var(--text-muted);">-</div>
-              <div style="flex:1;text-align:left;font-weight:700;">${b}</div>
-            </div>`;
-        }
-      }
-      inner += '</div>';
-      card.innerHTML = inner;
-      grid.appendChild(card);
-      section.appendChild(grid);
-      container.appendChild(section);
-    });
-    // Winner card
-    const winner = HARD_PROG_RESULTS.winner || '';
-    const wsec = document.createElement('div');
-    wsec.className = 'knockout-round';
-    wsec.innerHTML = `<div class="round-title">Vinder</div><div class="knockout-card"><div class="knockout-body">${winner ? '<div style="font-weight:700;font-size:1.1rem;">' + winner + '</div>' : '<div style="color:var(--text-muted);">Ikke Danmark</div>'}</div></div>`;
-    container.appendChild(wsec);
-    return;
-  }
 
-  // Fallback: render the original placeholder match cards
   KNOCKOUT_ROUNDS.forEach(round => {
     const section = document.createElement('div');
     section.className = 'knockout-round';
@@ -1775,21 +1529,21 @@ function renderCharts() {
   const chartData = { frost: [], viggo: [], oscar: [] };
   const labels = [];
   const sums = { frost: 0, viggo: 0, oscar: 0 };
+
   MATCHES.forEach((m, i) => {
     const r = RESULTS[m.id];
     if (r && r.s1 !== '' && r.s2 !== '') {
       const s1 = parseInt(r.s1), s2 = parseInt(r.s2);
       const outcome = s1 > s2 ? m.team1 : s2 > s1 ? m.team2 : 'draw';
-      PLAYERS.forEach(p => {
-        const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
-        const isEx = sc.s1 !== undefined && sc.s1 !== '' && parseInt(sc.s1) === s1 && parseInt(sc.s2) === s2;
+        PLAYERS.forEach(p => {
+          const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
+          const isEx = sc.s1 !== undefined && sc.s1 !== '' && parseInt(sc.s1) === s1 && parseInt(sc.s2) === s2;
         const actualOutcome = s1 > s2 ? 'home' : s2 > s1 ? 'away' : 'draw';
         if (isEx) sums[p] += PTS.exact;
         else if (getPredictedOutcome(p, m.id) === actualOutcome) sums[p] += PTS.wdl;
-        // Coerce to Number to ensure Chart.js treats values as numeric
-        chartData[p].push(Number(sums[p]));
-      });
-      labels.push('K' + m.no);
+          chartData[p].push(sums[p]);
+        });
+      labels.push('K'+m.no);
     }
   });
 
@@ -1800,59 +1554,15 @@ function renderCharts() {
     data: {
       labels: labels.length ? labels : ['Ingen data'],
       datasets: [
-        {
-          label: 'Frost',
-          data: chartData.frost.length ? chartData.frost : [0],
-          borderColor: '#1a7c45',
-          backgroundColor: 'rgba(26,124,69,0.12)',
-          pointRadius: 5,
-          pointBackgroundColor: '#ffffff',
-          pointBorderColor: '#1a7c45',
-          pointBorderWidth: 2,
-          borderWidth: 3,
-          tension: 0.25,
-          fill: true
-        },
-        {
-          label: 'Viggo',
-          data: chartData.viggo.length ? chartData.viggo : [0],
-          borderColor: '#1a4c8c',
-          backgroundColor: 'rgba(26,76,140,0.12)',
-          pointRadius: 5,
-          pointBackgroundColor: '#ffffff',
-          pointBorderColor: '#1a4c8c',
-          pointBorderWidth: 2,
-          borderWidth: 3,
-          tension: 0.25,
-          fill: true
-        },
-        {
-          label: 'Oscar',
-          data: chartData.oscar.length ? chartData.oscar : [0],
-          borderColor: '#6a1a8c',
-          backgroundColor: 'rgba(106,26,140,0.12)',
-          pointRadius: 5,
-          pointBackgroundColor: '#ffffff',
-          pointBorderColor: '#6a1a8c',
-          pointBorderWidth: 2,
-          borderWidth: 3,
-          tension: 0.25,
-          fill: true
-        }
+        { label: 'Frost', data: chartData.frost.length ? chartData.frost : [0], borderColor: '#1a7c45', backgroundColor: 'rgba(26,124,69,0.08)', pointRadius: 3, tension: 0.3, fill: true },
+        { label: 'Viggo', data: chartData.viggo.length ? chartData.viggo : [0], borderColor: '#1a4c8c', backgroundColor: 'rgba(26,76,140,0.08)', pointRadius: 3, tension: 0.3, fill: true },
+        { label: 'Oscar', data: chartData.oscar.length ? chartData.oscar : [0], borderColor: '#6a1a8c', backgroundColor: 'rgba(106,26,140,0.08)', pointRadius: 3, tension: 0.3, fill: true },
       ]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { stepSize: 1 },
-          grid: { color: 'rgba(0,0,0,0.05)' }
-        },
-        x: { ticks: { maxTicksLimit: 10 } }
-      }
+      scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { ticks: { maxTicksLimit: 10 } } }
     }
   });
 
