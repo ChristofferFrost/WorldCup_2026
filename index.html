@@ -696,6 +696,41 @@
     padding: 6px;
     text-decoration: underline;
   }
+  /* Full-bleed utility for sections that should stretch to the viewport edges */
+  .k2-full-bleed, .full-bleed {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    box-sizing: border-box;
+    /* keep wrapper padding neutral — inner cards will control their own margins */
+    padding: 0;
+    background: transparent; /* inner cards control background */
+  }
+  /* Make the white cards inside the full-bleed container expand closer to the viewport edges */
+  .k2-full-bleed .rules-card,
+  .full-bleed .rules-card,
+  .full-bleed .chart-card,
+  .full-bleed .group-block,
+  .full-bleed .enter-card,
+  .full-bleed .knockout-card {
+    max-width: none;
+    width: calc(100% - 3rem); /* small gutter on each side */
+    margin: 1.25rem auto; /* vertical spacing and center horizontally */
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  }
+  /* K2 point small stat adjustments */
+  .k2-full-bleed .rules-card > div > div[style*="display:flex"] > div {
+    min-width: 84px;
+  }
+  /* K2 summary layout helpers */
+  .k2-summary { display:flex; gap:8px; padding:8px 0; flex-wrap:wrap; align-items:stretch; }
+  .k2-stat { flex: 0 0 110px; text-align:center; padding:14px 8px; background:var(--gray); border-radius:8px; box-sizing:border-box; }
+  @media (max-width:900px) { .k2-stat { flex: 0 0 90px; } }
+  @media (max-width:600px) { .k2-stat { flex: 0 0 48%; margin-bottom:8px; } }
 </style>
 </head>
 <body>
@@ -710,7 +745,7 @@
   </div>
   <div class="scoreboard" style="margin-top: 1.5rem; border-radius: 10px; gap: 0; grid-template-columns: repeat(9, 1fr);">
     <div class="player-score">
-      <div class="player-name">Frost</div>
+    <div class="player-name">Christoffer</div>
       <div class="player-pts"><span id="frost-total">0</span><span class="pts-label">pts</span></div>
       <div class="score-breakdown">
         <span class="score-pill" id="frost-correct">0 eksakte</span>
@@ -798,7 +833,7 @@
   <div class="lock-box">
     <div class="lock-icon">🔒</div>
     <div class="lock-title">Admin adgang</div>
-    <div class="lock-sub">Kun Frost kan indlæse resultater og bud</div>
+  <div class="lock-sub">Kun Christoffer kan indlæse resultater og bud</div>
     <input class="lock-input" type="password" id="lock-pin" placeholder="PIN" maxlength="10"
       onkeydown="if(event.key==='Enter') submitPin()">
     <button class="lock-btn" onclick="submitPin()">Lås op</button>
@@ -812,10 +847,11 @@
 <div id="results" class="section active">
   <div class="section-header">
     <h2>Resultater & forudsigelser</h2>
-    <p>Gruppefasens 72 kampe med forudsigelser side om side · Klik på "Indlæs resultater" for at opdatere</p>
   </div>
-  <div class="filter-bar" id="group-filters"></div>
-  <div id="matches-container"></div>
+  <div class="full-bleed">
+    <div class="filter-bar" id="group-filters"></div>
+    <div id="matches-container"></div>
+  </div>
 </div>
 
 <!-- KNOCKOUT SECTION -->
@@ -824,7 +860,9 @@
     <h2>Knockout-fase</h2>
     <p>16-dels, kvart-, semi- og finale</p>
   </div>
-  <div id="knockout-container"></div>
+  <div class="full-bleed">
+    <div id="knockout-container"></div>
+  </div>
 </div>
 
 
@@ -835,27 +873,29 @@
     <h2>Point-udvikling</h2>
     <p>Kumuleret pointsum over kampene</p>
   </div>
-  <div class="chart-card">
-    <div class="chart-title">Samlede point</div>
-    <div class="legend">
-      <span class="legend-item"><span class="legend-dot" style="background:#1a7c45"></span> Frost</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#1a4c8c"></span> Viggo</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#6a1a8c"></span> Oscar</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#2a9d8f"></span> Axel</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#f08a5d"></span> Alma</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#8d3df0"></span> Flemming</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#d42f6a"></span> Samuel</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#2b6cff"></span> Helms</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#00a896"></span> Lygum</span>
+  <div class="full-bleed">
+    <div class="chart-card">
+      <div class="chart-title">Samlede point</div>
+      <div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:#1a7c45"></span> Christoffer</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1a4c8c"></span> Viggo</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#6a1a8c"></span> Oscar</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#2a9d8f"></span> Axel</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#f08a5d"></span> Alma</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8d3df0"></span> Flemming</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#d42f6a"></span> Samuel</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#2b6cff"></span> Helms</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#00a896"></span> Lygum</span>
+      </div>
+      <div style="position: relative; height: 280px;">
+  <canvas id="progressChart" role="img" aria-label="Linjediagram over Christoffer, Viggo og Oscars kumulative point over tid">Ingen data endnu.</canvas>
+      </div>
     </div>
-    <div style="position: relative; height: 280px;">
-      <canvas id="progressChart" role="img" aria-label="Linjediagram over Frost, Viggo og Oscars kumulative point over tid">Ingen data endnu.</canvas>
-    </div>
-  </div>
-  <div class="chart-card">
-    <div class="chart-title">Points per gruppe</div>
-    <div style="position: relative; height: 240px;">
-      <canvas id="groupChart" role="img" aria-label="Søjlediagram over point per gruppe for Frost, Viggo og Oscar">Ingen data endnu.</canvas>
+    <div class="chart-card">
+      <div class="chart-title">Points per gruppe</div>
+      <div style="position: relative; height: 240px;">
+  <canvas id="groupChart" role="img" aria-label="Søjlediagram over point per gruppe for Christoffer, Viggo og Oscar">Ingen data endnu.</canvas>
+      </div>
     </div>
   </div>
 </div>
@@ -866,46 +906,48 @@
     <h2>Regler & pointsystem</h2>
     <p>VM 2026 – Forudsig resultater</p>
   </div>
-  <div class="rules-card">
-    <div class="rules-title">Point for gruppekampe</div>
-    <div class="rule-row">
-      <span>Korrekt gættet cifferresultat</span>
-      <span class="rule-pts">3 pts</span>
+  <div class="full-bleed">
+    <div class="rules-card">
+      <div class="rules-title">Point for gruppekampe</div>
+      <div class="rule-row">
+        <span>Korrekt gættet cifferresultat</span>
+        <span class="rule-pts">3 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Korrekt udfald (1X2) – hvis ikke eksakt</span>
+        <span class="rule-pts">1 pt</span>
+      </div>
     </div>
-    <div class="rule-row">
-      <span>Korrekt udfald (1X2) – hvis ikke eksakt</span>
-      <span class="rule-pts">1 pt</span>
-    </div>
-  </div>
-  <div class="rules-card">
-    <div class="rules-title">Point for knockout-fasen</div>
-    <div class="rule-row">
-      <span>Korrekt 1/16-finalist</span>
-      <span class="rule-pts">2 pts</span>
-    </div>
-    <div class="rule-row">
-      <span>Korrekt 1/8-finalist</span>
-      <span class="rule-pts">3 pts</span>
-    </div>
-    <div class="rule-row">
-      <span>Korrekt kvartfinalist</span>
-      <span class="rule-pts">4 pts</span>
-    </div>
-    <div class="rule-row">
-      <span>Korrekt semifinalist</span>
-      <span class="rule-pts">5 pts</span>
-    </div>
-    <div class="rule-row">
-      <span>Korrekt finalist</span>
-      <span class="rule-pts">8 pts</span>
-    </div>
-    <div class="rule-row">
-      <span>Korrekt VM-vinder</span>
-      <span class="rule-pts">10 pts</span>
-    </div>
-    <div class="rule-row">
-      <span>Cifferresultater i knockout giver <strong>ikke</strong> point</span>
-      <span style="font-size:0.85rem; color:var(--red); font-weight:500;">0 pts</span>
+    <div class="rules-card">
+      <div class="rules-title">Point for knockout-fasen</div>
+      <div class="rule-row">
+        <span>Korrekt 1/16-finalist</span>
+        <span class="rule-pts">2 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Korrekt 1/8-finalist</span>
+        <span class="rule-pts">3 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Korrekt kvartfinalist</span>
+        <span class="rule-pts">4 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Korrekt semifinalist</span>
+        <span class="rule-pts">5 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Korrekt finalist</span>
+        <span class="rule-pts">8 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Korrekt VM-vinder</span>
+        <span class="rule-pts">10 pts</span>
+      </div>
+      <div class="rule-row">
+        <span>Cifferresultater i knockout giver <strong>ikke</strong> point</span>
+        <span style="font-size:0.85rem; color:var(--red); font-weight:500;">0 pts</span>
+      </div>
     </div>
   </div>
 </div>
@@ -1863,8 +1905,26 @@ function loadFromStorage() {
     if (k2p) {
       try {
         const parsed = JSON.parse(k2p) || {};
+        // Merge parsed K2 preds into defaults, but don't let empty strings/empty arrays in storage
+        // overwrite the hardcoded defaults. Only apply a parsed value if it's meaningfully set.
         Object.keys(K2_PREDS).forEach(player => {
-          K2_PREDS[player] = Object.assign({}, K2_PREDS[player] || {}, parsed[player] || {});
+          const def = K2_PREDS[player] || {};
+          const parsedPlayer = parsed[player] || {};
+          const merged = Object.assign({}, def);
+          ['topScorer','topAssist','goldenGlove'].forEach(key => {
+            const val = parsedPlayer[key];
+            if (val === undefined || val === null) return;
+            if (Array.isArray(val)) {
+              // if array has any non-empty entries, use it
+              const any = val.some(v => v && String(v).trim() !== '');
+              if (any) merged[key] = val.map(v => v || '');
+            } else if (typeof val === 'string') {
+              if (val.trim() !== '') merged[key] = val;
+            } else {
+              merged[key] = val;
+            }
+          });
+          K2_PREDS[player] = merged;
         });
       } catch(e) { /* ignore parse errors */ }
     }
@@ -1891,6 +1951,9 @@ function saveToStorage() {
 const PTS = { exact: 3, wdl: 1, r32: 2, r16: 3, qf: 4, sf: 5, final: 8, winner: 10 };
 // Add new players here (identifiers used in storage and keys)
 const PLAYERS = ['frost', 'viggo', 'oscar', 'axel', 'alma', 'flemming', 'samuel', 'helms', 'lygum'];
+
+// Human-friendly display names for players (used in labels). Keep keys as ids.
+const DISPLAY_NAMES = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum' };
 
 function scoreMatch(result, prediction) {
   if (!result || result.s1 === '' || result.s2 === '') return 0;
@@ -2020,7 +2083,7 @@ function renderMatches() {
         <div class="preds-wrapper">
           ${PLAYERS.map(p => `
             <div class="pred-col" style="min-width:70px;">
-              <span class="pred-label">${(p.charAt(0).toUpperCase()+p.slice(1))}</span>
+              <span class="pred-label">${(DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase()+p.slice(1)))}</span>
               <span class="pred-box pred-${p}">${getDisplay(p)}</span>
             </div>
           `).join('')}
@@ -2087,7 +2150,7 @@ function renderKnockout() {
       card.className = 'knockout-card';
       // Build per-player predictions dynamically
       const predsHtml = PLAYERS.map(p => {
-        const display = p.charAt(0).toUpperCase() + p.slice(1);
+        const display = DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase() + p.slice(1));
         return `<div class="ko-pred pred-${p}"><span>${display}</span><span>${r&&r[p]?r[p]:'TBD'}</span></div>`;
       }).join('');
       card.innerHTML = `
@@ -2208,7 +2271,7 @@ function savePredictions() {
   saveToStorage();
   calcTotals();
   renderMatches();
-  const PLAYER_NAMES = { frost: 'Frost', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum' };
+  const PLAYER_NAMES = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum' };
   alert('✅ Bud gemt for ' + (PLAYER_NAMES[player] || player) + '!');
 }
 
@@ -2246,7 +2309,7 @@ function renderCharts() {
     data: {
       labels: labels.length ? labels : ['Ingen data'],
       datasets: [
-        { label: 'Frost', data: chartData.frost.length ? chartData.frost : [0], borderColor: '#1a7c45', backgroundColor: 'rgba(26,124,69,0.08)', pointRadius: 3, tension: 0.3, fill: true },
+  { label: 'Christoffer', data: chartData.frost.length ? chartData.frost : [0], borderColor: '#1a7c45', backgroundColor: 'rgba(26,124,69,0.08)', pointRadius: 3, tension: 0.3, fill: true },
         { label: 'Viggo', data: chartData.viggo.length ? chartData.viggo : [0], borderColor: '#1a4c8c', backgroundColor: 'rgba(26,76,140,0.08)', pointRadius: 3, tension: 0.3, fill: true },
         { label: 'Oscar', data: chartData.oscar.length ? chartData.oscar : [0], borderColor: '#6a1a8c', backgroundColor: 'rgba(106,26,140,0.08)', pointRadius: 3, tension: 0.3, fill: true },
       ]
@@ -2300,15 +2363,18 @@ function renderK2() {
   const cont = document.getElementById('k2-content');
   if (!cont) return;
   const COLORS = { frost: '#1a7c45', viggo: '#1a4c8c', oscar: '#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896' };
-  const NAMES  = { frost: 'FROST', viggo: 'VIGGO', oscar: 'OSCAR', axel:'AXEL', alma:'ALMA', flemming:'FLEMMING', samuel:'SAMUEL', helms:'HELMS', lygum:'LYGUM' };
+  const NAMES  = { frost: 'CHRISTOFFER', viggo: 'VIGGO', oscar: 'OSCAR', axel:'AXEL', alma:'ALMA', flemming:'FLEMMING', samuel:'SAMUEL', helms:'HELMS', lygum:'LYGUM' };
 
   // Returns { total, slots: [{pred, pts}] } for scorer/assist, or { total, slots } for goldenGlove
   function getScore(player, cat) {
     const pred = (K2_PREDS[player] || {})[cat];
     if (cat === 'goldenGlove') {
-      if (!K2_RESULTS.goldenGlove) return null;
-      const hit = pred && pred === K2_RESULTS.goldenGlove;
-      return { total: hit ? 5 : (pred ? 0 : null), slots: [{ pred: pred || '', pts: hit ? 5 : (pred ? 0 : null) }] };
+      // Always return the player's golden glove prediction so we can display it
+      // even if the official result is not yet present. Points (pts) remain
+      // null until official result is entered.
+      const hit = K2_RESULTS.goldenGlove && pred && pred === K2_RESULTS.goldenGlove;
+      const pts = hit ? 5 : (K2_RESULTS.goldenGlove ? (pred ? 0 : null) : null);
+      return { total: pts || 0, slots: [{ pred: pred || '', pts: pts }] };
     }
     const results = cat === 'topScorer' ? K2_RESULTS.scorers : K2_RESULTS.assists;
     if (!results[0]) return null; // no official results yet
@@ -2324,7 +2390,9 @@ function renderK2() {
     return { total, slots };
   }
 
-  const totals = { frost: 0, viggo: 0, oscar: 0 };
+  // Initialize totals for all players
+  const totals = {};
+  PLAYERS.forEach(p => totals[p] = 0);
   PLAYERS.forEach(p => ['topScorer','topAssist','goldenGlove'].forEach(cat => {
     const s = getScore(p, cat);
     if (s && s.total) totals[p] += s.total;
@@ -2342,9 +2410,12 @@ function renderK2() {
     const hasResult = cat === 'goldenGlove' ? !!K2_RESULTS.goldenGlove : !!K2_RESULTS.scorers[0] || !!K2_RESULTS.assists[0];
     let html = '<div style="text-align:center;">';
     if (cat === 'goldenGlove') {
-      const sl = slots[0] || { pred: '', pts: null };
+      // Show each player's golden glove pick directly so it's visible even
+      // when the official result isn't set yet.
+      const playerPred = (K2_PREDS[player] || {}).goldenGlove || '';
+      const sl = slots[0] || { pred: playerPred, pts: null };
       const bg = hasResult && sl.pred && sl.pts !== null ? (sl.pts > 0 ? 'background:rgba(26,124,69,0.12);' : 'background:rgba(192,57,43,0.08);') : '';
-  html += '<span style="display:inline-block;padding:4px 8px;border-radius:6px;font-size:0.82rem;' + bg + (sl.pred ? '' : 'color:var(--text-muted);') + '\">' + (sl.pred || '&#8211;') + '</span>';
+      html += '<span style="display:inline-block;padding:4px 8px;border-radius:6px;font-size:0.82rem;' + bg + (sl.pred ? '' : 'color:var(--text-muted);') + '">' + (sl.pred || '&#8211;') + '</span>';
       if (hasResult && sl.pred && sl.pts !== null) html += '<div style="font-size:0.65rem;font-weight:600;color:' + (sl.pts > 0 ? '#1a7c45' : '#c0392b') + ';">' + (sl.pts > 0 ? '+' + sl.pts + ' pt' : '&#10007;') + '</div>';
     } else {
       const playerPred = K2_PREDS[player] || {};
@@ -2376,35 +2447,43 @@ function renderK2() {
 
   let html = '';
 
-  // Score summary
-  html += '<div class="rules-card"><div class="rules-title">K2 Point</div><div style="display:flex;gap:8px;padding:8px 0;">';
+  // Wrap K2 content in a full-bleed container so white cards can stretch to edges
+  html += '<div class="k2-full-bleed">';
+
+  // Score summary (use fixed-size stat boxes that can wrap)
+  html += '<div class="rules-card"><div class="rules-title">K2 Point</div><div class="k2-summary">';
   PLAYERS.forEach(p => {
-    html += '<div style="flex:1;text-align:center;padding:14px 8px;background:var(--gray);border-radius:8px;">';
+    html += '<div class="k2-stat">';
     html += '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>';
     html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2.5rem;line-height:1;color:' + COLORS[p] + ';">' + totals[p] + '</div>';
     html += '<div style="font-size:0.68rem;color:var(--text-muted);margin-top:4px;">/ 35 pts</div></div>';
   });
   html += '</div></div>';
+  // keep k2-full-bleed open so the following 'Bud & resultater' card is inside it
 
   // Predictions + results table
+  // Use dynamic grid columns so the K2 table scales to the number of players
+  const cols = '120px repeat(' + PLAYERS.length + ',1fr) 100px';
   html += '<div class="rules-card"><div class="rules-title">Bud &amp; resultater</div><div style="overflow-x:auto;"><div style="min-width:460px;">';
-  html += '<div style="display:grid;grid-template-columns:120px repeat(3,1fr) 100px;gap:8px;padding:8px 0;border-bottom:2px solid var(--gray-mid);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;"><div></div>';
+  html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:8px 0;border-bottom:2px solid var(--gray-mid);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;"><div></div>';
   PLAYERS.forEach(p => { html += '<div style="text-align:center;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>'; });
   html += '<div style="text-align:center;color:var(--text-muted);">OFFICIELT</div></div>';
   rows.forEach(row => {
-    html += '<div style="display:grid;grid-template-columns:120px repeat(3,1fr) 100px;gap:8px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:start;"><div style="font-size:0.88rem;font-weight:500;padding-top:4px;">' + row.label + '</div>';
+    html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:start;"><div style="font-size:0.88rem;font-weight:500;padding-top:4px;">' + row.label + '</div>';
     PLAYERS.forEach(p => { html += predCell(p, row.key); });
     html += resultCell(row) + '</div>';
   });
   html += '</div></div></div>';
 
-  // Rules
+  // Rules (keep inside the k2-full-bleed wrapper so the rules card matches the other K2 cards)
   html += '<div class="rules-card"><div class="rules-title">Regler \u2013 Konkurrence 2</div>';
   html += '<div class="rule-row"><span>Korrekt placering (Nr.1, Nr.2 eller Nr.3) – scorer eller assist</span><span class="rule-pts">5 pts</span></div>';
   html += '<div class="rule-row"><span>Korrekt spiller men forkert placering i top 3</span><span class="rule-pts">2 pts</span></div>';
   html += '<div class="rule-row"><span>Korrekt Golden Glove</span><span class="rule-pts">5 pts</span></div>';
   html += '<div style="padding:12px 0;font-size:0.78rem;color:var(--text-muted);line-height:1.7;">Hver spiller laver sin egen top 3 for scorer og assist.<br>Max: (5+5+5) + (5+5+5) + 5 = 35 pts.<br>Ved pointlighed om Nr. 1 afgøres placeringen af FIFA\'s officielle rangering.<br>Deler to spillere Nr. 2 og Nr. 3 med samme mål/assist, tæller begge placeringer.</div>';
   html += '</div>';
+
+  html += '</div>'; // close k2-full-bleed
 
   cont.innerHTML = html;
 }
@@ -2464,7 +2543,7 @@ function saveK2Preds() {
   };
   saveToStorage();
   renderK2();
-  const PNAMES = { frost:'Frost', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum' };
+  const PNAMES = { frost:'Christoffer', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum' };
   alert('\u2705 K2 bud gemt for ' + (PNAMES[player] || player) + '!');
 }
 
@@ -2500,7 +2579,7 @@ function populateK2PlayerSelect() {
   const sel = document.getElementById('k2-player');
   if (!sel) return;
   sel.innerHTML = '';
-  const PN = { frost:'Frost', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum' };
+  const PN = { frost:'Christoffer', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum' };
   PLAYERS.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p;

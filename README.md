@@ -1,6 +1,6 @@
 # WorldCup_2026 — VM 2026 Bet Tracker
 
-This repository contains a standalone HTML app (single file) that tracks predictions and scores for a World Cup 2026 bet game between Frost, Viggo and Oscar.
+This repository contains a standalone HTML app (single file) that tracks predictions and scores for a World Cup 2026 bet game between Christoffer, Viggo and Oscar.
 
 Files
 - `index.html` — the website. Open it in a browser locally or host it with GitHub Pages.
