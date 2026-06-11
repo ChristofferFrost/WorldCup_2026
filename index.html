@@ -604,6 +604,7 @@
     gap: 8px;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
+    justify-content: center;
   }
   .filter-btn {
     background: white;
@@ -1269,7 +1270,7 @@ let RESULTS = {};
 // HARD_RESULTS = { 1: { s1: '2', s2: '0' }, 2: { s1: '1', s2: '1' }, /* ... */ }
 const HARD_RESULTS = {
   // Group stage matches (1..72)
-  1: { s1: '2', s2: '0' }, 2: { s1: '2', s2: '2' }, 3: { s1: '1', s2: '2' }, 4: { s1: '0', s2: '0' },
+  1: { s1: '', s2: '' }, 2: { s1: '', s2: '' }, 3: { s1: '', s2: '' }, 4: { s1: '', s2: '' },
   5: { s1: '', s2: '' }, 6: { s1: '', s2: '' }, 7: { s1: '', s2: '' }, 8: { s1: '', s2: '' },
   9: { s1: '', s2: '' }, 10: { s1: '', s2: '' }, 11: { s1: '', s2: '' }, 12: { s1: '', s2: '' },
   13: { s1: '', s2: '' }, 14: { s1: '', s2: '' }, 15: { s1: '', s2: '' }, 16: { s1: '', s2: '' },
@@ -2061,7 +2062,7 @@ const HARD_KO_STAGE_PREDS = {
   karlemil: {r32: ['Mexico','Sydkorea', 'Sydafrika', 'Schweiz', 'Qatar', 'Canada', 'Brasilien', 'Marokko', 'Skotland', 'USA', 'Tyrkiet', 'Paraguay', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Belgien', 'Egypten', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'DR Congo', 'England', 'Kroatien', 'Ghana'], r16: ['Tyskland', 'Frankrig', 'Sydkorea', 'Marokko', 'Columbia', 'Spanien', 'Tyrkiet', 'Belgien', 'Brasilien', 'Norge', 'Mexico', 'England', 'Argentina', 'Egypten', 'Schweiz', 'Portugal'], qf: ['Frankrig', 'Marokko', 'Spanien', 'Belgien', 'Brasilien', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'England', 'Argentina'], final: ['Spanien', 'England'], winner: ['England']},
 };
 const HARD_KO_STAGE_RESULTS = {
-   r32: ['Denmark','Frankrig', 'Argentina', 'Elfenbenskysten'], r16: [], qf: [], sf: [], final: [], winner: []
+   r32: [], r16: [], qf: [], sf: [], final: [], winner: ['Ikke Danmark']
 };
 
 // Convert stage arrays into per-match mapping (73..104). This is flexible: if you provide
@@ -2201,7 +2202,7 @@ let K2_PREDS = {
   lygum:  { topScorer: ['Olise','Oyarzabal','Kane'], topAssist: ['Kante','Pedri','Bruno F'], goldenGlove: 'David Raya' },
   karlemil:  { topScorer: ['Mbappe','Kane','Messi'], topAssist: ['Bruno F','De Bruyne','Yamal'], goldenGlove: 'E. Martinez' },
 };
-let K2_RESULTS = { scorers: ['benzema','Ronaldo','Mbappe'], assists: ['Messi','Yamal','Ronaldo'], goldenGlove: 'David Raya' };
+let K2_RESULTS = { scorers: ['','',''], assists: ['','',''], goldenGlove: '' };
 
 // Bump this string whenever HARD_PREDICTIONS or HARD_RESULTS change so stale
 // localStorage from previous deploys is discarded automatically.
