@@ -2100,14 +2100,16 @@ let K2_RESULTS = { scorers: ['benzema','Ronaldo','Mbappe'], assists: ['Messi','Y
 
 // Bump this string whenever HARD_PREDICTIONS or HARD_RESULTS change so stale
 // localStorage from previous deploys is discarded automatically.
-const DATA_VERSION = '2026-v3';
+const DATA_VERSION = '2026-v4';
 
 function loadFromStorage() {
   try {
-    // Wipe stale predictions from old deploys so HARD_PREDICTIONS always wins.
+    // Wipe stale data from old deploys so hardcoded values always win.
     if (localStorage.getItem('wcup2026_data_version') !== DATA_VERSION) {
       localStorage.removeItem('wcup2026_score_preds');
       localStorage.removeItem('wcup2026_results');
+      localStorage.removeItem('wcup2026_k2_results');
+      localStorage.removeItem('wcup2026_k2_preds');
       localStorage.setItem('wcup2026_data_version', DATA_VERSION);
     }
 
@@ -2156,8 +2158,10 @@ function loadFromStorage() {
     if (k2r) {
       try {
         const parsedR = JSON.parse(k2r) || {};
-        K2_RESULTS.scorers = (parsedR.scorers && parsedR.scorers.length) ? parsedR.scorers.slice(0,3).map(s=>s||'') : K2_RESULTS.scorers;
-        K2_RESULTS.assists = (parsedR.assists && parsedR.assists.length) ? parsedR.assists.slice(0,3).map(s=>s||'') : K2_RESULTS.assists;
+        const hasScorers = parsedR.scorers && parsedR.scorers.some(s => s && s.trim());
+        const hasAssists = parsedR.assists && parsedR.assists.some(s => s && s.trim());
+        K2_RESULTS.scorers = hasScorers ? parsedR.scorers.slice(0,3).map(s=>s||'') : K2_RESULTS.scorers;
+        K2_RESULTS.assists = hasAssists ? parsedR.assists.slice(0,3).map(s=>s||'') : K2_RESULTS.assists;
         K2_RESULTS.goldenGlove = parsedR.goldenGlove || K2_RESULTS.goldenGlove;
       } catch(e) { /* ignore parse errors */ }
     }
