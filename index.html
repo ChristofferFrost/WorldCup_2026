@@ -329,69 +329,53 @@
     color: var(--green-dark);
     margin-bottom: 1rem;
   }
-  .knockout-grid {
+
+  /* Stage list layout: each stage is a slim card with a vertical list of slots */
+  .knockout-stage-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
+    align-items: start;
   }
-  .knockout-card {
+  .knockout-stage-list .stage-team {
     background: white;
     border: 1px solid var(--border);
     border-radius: 10px;
-    overflow: hidden;
-  }
-  .knockout-header {
-    background: var(--gray);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 6px 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .knockout-body { padding: 10px 12px; }
-  .ko-teams {
+    padding: 10px 12px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 0.88rem;
-    font-weight: 500;
-    margin-bottom: 8px;
-    gap: 6px;
+    gap: 12px;
+    box-shadow: 0 6px 16px rgba(12,18,14,0.03);
+    font-size: 0.95rem;
   }
-  .ko-vs {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    flex-shrink: 0;
-  }
-  .ko-result {
+  .knockout-stage-list .stage-team.hit { border-color: rgba(26,124,69,0.14); box-shadow: 0 8px 20px rgba(22,92,56,0.04); background: linear-gradient(180deg, rgba(234,249,237,1), #fff); }
+  .stage-team .team-index {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem;
-    text-align: center;
     color: var(--text-muted);
-    background: var(--gray);
-    border-radius: 4px;
-    padding: 2px 8px;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
+    font-size: 0.95rem;
+    min-width: 28px;
+    text-align: right;
   }
-  .ko-result.filled {
-    background: var(--green-dark);
-    color: white;
+  .stage-team .team-name {
+    font-weight: 600;
+    color: var(--text);
   }
-  .ko-preds {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+  /* winner gets a subtle highlight */
+  .knockout-round.winner .stage-team,
+  .knockout-stage-list.winner .stage-team { background: linear-gradient(180deg, rgba(250,245,235,1), #fff); border-color: rgba(201,146,42,0.12); }
+
+  /* Make the stage list collapse into a single column for small stages */
+  @media (min-width: 720px) {
+    .knockout-stage-list { grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); }
   }
-  .ko-pred {
-    font-size: 0.78rem;
-    padding: 3px 8px;
-    border-radius: 3px;
-    display: flex;
-    justify-content: space-between;
+  @media (max-width: 600px) {
+    .knockout-stage-list { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stage-team { padding: 10px; font-size: 0.9rem; }
   }
+
+  /* KO filter UI */
+  .ko-filter { max-width: calc(100% - 4rem); margin: 0.5rem auto 0.75rem; display:flex; justify-content:flex-end; }
+  .ko-filter select { padding:8px 12px; border-radius:8px; border:1px solid var(--gray-mid); font-size:0.95rem; background:white; }
 
   /* RULES section */
   .rules-card {
@@ -715,9 +699,11 @@
   .full-bleed .chart-card,
   .full-bleed .group-block,
   .full-bleed .enter-card,
-  .full-bleed .knockout-card {
+  .full-bleed .knockout-card,
+  .full-bleed .knockout-stage-list,
+  .full-bleed .group-block {
     max-width: none;
-    width: calc(100% - 3rem); /* small gutter on each side */
+    width: calc(100% - 4rem); /* slightly larger gutter on each side */
     margin: 1.25rem auto; /* vertical spacing and center horizontally */
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.04);
@@ -1873,6 +1859,146 @@ const HARD_PREDICTIONS = {
   },
 };
 
+// Hardcoded knockout stage lists: provide arrays of teams per stage instead of per-match mapping.
+// Example:
+// HARD_KO_STAGE_PREDS = { frost: { r32: ['TeamA',...16], r16: ['TeamA',...8], qf: [...4], sf: [...2], final: [...2], winner: ['TeamX'] }, ... }
+// HARD_KO_STAGE_RESULTS = { r32: [...16], r16: [...8], qf: [...4], sf: [...2], final: [...2], winner: ['TeamX'] }
+const HARD_KO_STAGE_PREDS = {
+  frost: {r32: ['Denmark','Frankrig'], r16: [], qf: [], sf: [], final: [], winner: []}, 
+  viggo: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  oscar: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  axel: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  alma: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  flemming: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  samuel: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  helms: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  lygum: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+};
+const HARD_KO_STAGE_RESULTS = {
+   r32: ['Denmark','Frankrig'], r16: [], qf: [], sf: [], final: [], winner: []
+};
+
+// Convert stage arrays into per-match mapping (73..104). This is flexible: if you provide
+// HARD_KO_STAGE_PREDS / HARD_KO_STAGE_RESULTS with arrays for r32/r16/qf/sf/final/winner,
+// we'll map them into HARD_KO_PREDS and HARD_KO_RESULTS used elsewhere.
+function applyStageLists() {
+  // mapping of stage -> starting KO number and count
+  const map = { r32: {start:73,count:16}, r16: {start:89,count:8}, qf: {start:97,count:4}, sf: {start:101,count:2}, final: {start:103,count:2} /* note: we will treat winner separately */ };
+
+  // Ensure existing per-match objects exist
+  if (typeof HARD_KO_PREDS === 'undefined') window.HARD_KO_PREDS = {};
+  if (typeof HARD_KO_RESULTS === 'undefined') window.HARD_KO_RESULTS = {};
+
+  // Apply player preds
+  Object.keys(HARD_KO_STAGE_PREDS).forEach(player => {
+    const stages = HARD_KO_STAGE_PREDS[player] || {};
+    Object.keys(map).forEach(stage => {
+      const arr = stages[stage];
+      if (!Array.isArray(arr)) return;
+      const info = map[stage];
+      for (let i=0;i<Math.min(arr.length, info.count); i++) {
+        const koNum = info.start + i;
+        if (!HARD_KO_PREDS[player]) HARD_KO_PREDS[player] = {};
+        HARD_KO_PREDS[player][koNum] = arr[i];
+      }
+    });
+    // final stage array may be provided as finalists (2 teams) or winner
+    if (Array.isArray(stages.final) && stages.final.length >= 1) {
+      // map finalists to the semis/final slots conservatively: final[0] -> one finalist slot
+      // We set match 104 to the winner if there's a single winner provided in 'winner' or final[0]
+      if (stages.winner && stages.winner[0]) {
+        HARD_KO_PREDS[player][104] = stages.winner[0];
+      } else if (stages.final[0]) {
+        // if only finalists provided, leave 104 blank unless winner supplied
+      }
+    }
+  });
+
+  // Apply official results from stage lists
+  Object.keys(HARD_KO_STAGE_RESULTS).forEach(stage => {
+    const arr = HARD_KO_STAGE_RESULTS[stage];
+    if (!Array.isArray(arr)) return;
+    if (stage === 'winner' && arr[0]) {
+      HARD_KO_RESULTS[104] = arr[0];
+      return;
+    }
+    const info = map[stage];
+    if (!info) return;
+    for (let i=0;i<Math.min(arr.length, info.count); i++) {
+      const koNum = info.start + i;
+      HARD_KO_RESULTS[koNum] = arr[i];
+    }
+  });
+}
+
+// Compute KO totals from HARD_KO_PREDS & HARD_KO_RESULTS (per-match maps)
+function computeKOTotals() {
+  // If stage-list style results are present, prefer that (r32/r16/qf/sf/final/winner arrays)
+  const stageKeys = ['r32','r16','qf','sf','final','winner'];
+  const stageResults = HARD_KO_STAGE_RESULTS || {};
+  const hasStageResults = stageKeys.some(k => Array.isArray(stageResults[k]) && stageResults[k].length > 0);
+
+  const totals = {};
+  PLAYERS.forEach(p => totals[p] = 0);
+
+  if (hasStageResults) {
+    const ptsMap = { r32: PTS.r32, r16: PTS.r16, qf: PTS.qf, sf: PTS.sf, final: PTS.final, winner: PTS.winner };
+    PLAYERS.forEach(p => {
+      const predStages = HARD_KO_STAGE_PREDS[p] || {};
+      stageKeys.forEach(k => {
+        const official = Array.isArray(stageResults[k]) ? stageResults[k].filter(Boolean) : [];
+        if (!official.length) return;
+        const predicted = Array.isArray(predStages[k]) ? predStages[k].filter(Boolean) : [];
+        if (k === 'winner') {
+          const predVal = predicted[0] || '';
+          if (predVal && official[0] && predVal === official[0]) totals[p] += ptsMap.winner;
+        } else {
+          // Award pts per correctly predicted team in this stage (intersection size)
+          const offSet = new Set(official);
+          const hits = predicted.reduce((acc, t) => acc + (offSet.has(t) ? 1 : 0), 0);
+          totals[p] += hits * (ptsMap[k] || 0);
+        }
+      });
+    });
+    return totals;
+  }
+
+  // Fallback: per-match mapping (legacy behavior). Award per-match points when per-match maps are present.
+  function ptsFor(ko) {
+    if (ko>=73 && ko<=88) return PTS.r32;
+    if (ko>=89 && ko<=96) return PTS.r16;
+    if (ko>=97 && ko<=100) return PTS.qf;
+    if (ko>=101 && ko<=102) return PTS.sf;
+    if (ko===104) return PTS.winner;
+    return 0;
+  }
+
+  Object.keys(HARD_KO_RESULTS || {}).forEach(k => {
+    const ko = parseInt(k,10);
+    const official = HARD_KO_RESULTS[ko];
+    if (!official) return;
+    if (ko === 104) return; // final handled below
+    const pts = ptsFor(ko);
+    PLAYERS.forEach(p => {
+      const pick = (HARD_KO_PREDS[p] && HARD_KO_PREDS[p][ko]) || '';
+      if (pick && pick === official) totals[p] += pts;
+    });
+  });
+
+  const finalistA = HARD_KO_RESULTS[101] || null;
+  const finalistB = HARD_KO_RESULTS[102] || null;
+  const finalWinner = HARD_KO_RESULTS[104] || null;
+  PLAYERS.forEach(p => {
+    const pick = (HARD_KO_PREDS[p] && HARD_KO_PREDS[p][104]) || '';
+    if (!pick) return;
+    if (finalWinner && pick === finalWinner) totals[p] += PTS.winner;
+    else if ((finalistA && pick === finalistA) || (finalistB && pick === finalistB)) totals[p] += PTS.final;
+  });
+
+  return totals;
+}
+
+
 let SCORE_PREDS = { frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {} };
 let activeGroup = 'all';
 let predFilter = 'all';
@@ -2013,11 +2139,18 @@ function calcTotals() {
   });
 
   PLAYERS.forEach(p => {
+    // Add knockout points (computed from hardcoded stage lists or per-match KO results)
+    try {
+      const koTotals = computeKOTotals();
+      if (koTotals && koTotals[p]) totals[p] += koTotals[p];
+    } catch(e) { /* ignore if computeKOTotals not available */ }
+
     document.getElementById(p+'-total').textContent = totals[p];
     document.getElementById(p+'-correct').textContent = exact[p] + ' eksakte';
     document.getElementById(p+'-wdl').textContent = wdl[p] + ' 1X2';
   });
 }
+
 
 // ======= NAV =======
 function showSection(id, btn) {
@@ -2134,40 +2267,111 @@ const KNOCKOUT_ROUNDS = [
 
 function renderKnockout() {
   const container = document.getElementById('knockout-container');
+  // preserve current filter selection so re-render doesn't reset it
+  const prevFilterEl = document.getElementById('ko-player-filter');
+  const prevFilter = prevFilterEl && prevFilterEl.value ? prevFilterEl.value : 'official';
   container.innerHTML = '';
 
-  KNOCKOUT_ROUNDS.forEach(round => {
+  // Render simple stage lists: r32, r16, qf, sf, final, winner
+  const stages = [
+    { key: 'r32', title: 'Round of 32' , count: 32 },
+    { key: 'r16', title: 'Round of 16' , count: 16 },
+    { key: 'qf',  title: 'Quarter finals', count: 8 },
+    { key: 'sf',  title: 'Semi finals', count: 4 },
+    { key: 'final', title: 'Finalists', count: 2 },
+    { key: 'winner', title: 'Winner', count: 1 },
+  ];
+
+  // Player filter UI (Official results or a player's predictions)
+  const filterBar = document.createElement('div');
+  filterBar.className = 'ko-filter';
+  const sel = document.createElement('select');
+  sel.id = 'ko-player-filter';
+  const optOfficial = document.createElement('option'); optOfficial.value = 'official'; optOfficial.textContent = 'Official results'; sel.appendChild(optOfficial);
+  // removed 'show all' option per request
+  PLAYERS.forEach(p => {
+    const o = document.createElement('option'); o.value = p; o.textContent = (DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase()+p.slice(1))); sel.appendChild(o);
+  });
+  sel.value = prevFilter || 'official';
+  sel.addEventListener('change', () => renderKnockout());
+  filterBar.appendChild(sel);
+  container.appendChild(filterBar);
+
+  const view = sel.value || 'official';
+
+  // helper: try to get a player's stage-array for a given stage; fall back to per-match mapping if needed
+  const stageMap = { r32: {start:73,count:16}, r16: {start:89,count:8}, qf: {start:97,count:4}, sf: {start:101,count:2}, final: {start:103,count:2} };
+  function getPlayerStageArray(player, key, count) {
+    // try stage-array first
+    if (HARD_KO_STAGE_PREDS && HARD_KO_STAGE_PREDS[player] && Array.isArray(HARD_KO_STAGE_PREDS[player][key])) {
+      return HARD_KO_STAGE_PREDS[player][key].slice(0, count);
+    }
+    // fallback to per-match mapping
+    if (HARD_KO_PREDS && HARD_KO_PREDS[player]) {
+      const arr = [];
+      const info = stageMap[key];
+      if (info) {
+        for (let i=0;i<Math.min(count, info.count); i++) {
+          const ko = info.start + i;
+          arr.push(HARD_KO_PREDS[player] && HARD_KO_PREDS[player][ko] ? HARD_KO_PREDS[player][ko] : '');
+        }
+        return arr;
+      }
+    }
+    return Array(count).fill('');
+  }
+
+  // helper: official stage array from HARD_KO_STAGE_RESULTS or per-match HARD_KO_RESULTS
+  function getOfficialStageArray(key, count) {
+    if (HARD_KO_STAGE_RESULTS && Array.isArray(HARD_KO_STAGE_RESULTS[key]) && HARD_KO_STAGE_RESULTS[key].length) return HARD_KO_STAGE_RESULTS[key].slice(0,count);
+    const arr = [];
+    const info = stageMap[key];
+    if (info && HARD_KO_RESULTS) {
+      for (let i=0;i<Math.min(count, info.count); i++) {
+        const ko = info.start + i;
+        arr.push(HARD_KO_RESULTS[ko] || '');
+      }
+      return arr;
+    }
+    // special: winner may be at 104
+    if (key === 'winner' && HARD_KO_RESULTS && HARD_KO_RESULTS[104]) return [HARD_KO_RESULTS[104]];
+    return Array(count).fill('');
+  }
+
+  stages.forEach(s => {
     const section = document.createElement('div');
     section.className = 'knockout-round';
-    section.innerHTML = `<div class="round-title">${round.name}</div>`;
-    const grid = document.createElement('div');
-    grid.className = 'knockout-grid';
+    section.innerHTML = `<div class="round-title">${s.title}</div>`;
 
-    round.matches.forEach(m => {
-      const r = RESULTS['ko_'+m.ko];
-      const hasResult = r && r.s1 !== '';
-      const card = document.createElement('div');
-      card.className = 'knockout-card';
-      // Build per-player predictions dynamically
-      const predsHtml = PLAYERS.map(p => {
-        const display = DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase() + p.slice(1));
-        return `<div class="ko-pred pred-${p}"><span>${display}</span><span>${r&&r[p]?r[p]:'TBD'}</span></div>`;
-      }).join('');
-      card.innerHTML = `
-        <div class="knockout-header">Kamp ${m.ko}</div>
-        <div class="knockout-body">
-          <div class="ko-teams">
-            <span style="font-size:0.82rem;">${m.teams}</span>
-          </div>
-          <div class="ko-result" style="${hasResult?'background:#0f4a28;color:white':''}">${hasResult?(r.s1+' : '+r.s2):'–'}</div>
-          <div class="ko-preds">${predsHtml}</div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
+    const listWrap = document.createElement('div');
+    listWrap.className = 'knockout-stage-list';
+    const official = getOfficialStageArray(s.key, s.count);
+    // If viewing a specific player, pull their predictions for this stage
+    const playerPreds = (view && view !== 'official' && view !== 'all') ? getPlayerStageArray(view, s.key, s.count) : null;
 
-    section.appendChild(grid);
-    container.appendChild(section);
+    for (let i = 0; i < s.count; i++) {
+      const item = document.createElement('div');
+      item.className = 'stage-team';
+      const offName = official[i] || '';
+      const predName = playerPreds ? (playerPreds[i] || '') : '';
+      let displayName = '';
+  if (view === 'official') displayName = offName || 'TBD';
+      else displayName = predName || 'TBD';
+      item.innerHTML = `<span class="team-index">${i+1}.</span> <span class="team-name">${displayName}</span>`;
+      // highlight if a player's pick matches the official
+      if (playerPreds && offName && predName && offName === predName) {
+        item.classList.add('hit');
+      }
+      // no 'all' view; only player or official views supported
+      listWrap.appendChild(item);
+    }
+
+    section.appendChild(listWrap);
+    // wrap each stage in a full-bleed container so cards can stretch to edges
+    const fb = document.createElement('div');
+    fb.className = 'full-bleed';
+    fb.appendChild(section);
+    container.appendChild(fb);
   });
 }
 
@@ -2568,6 +2772,8 @@ function saveK2Results() {
 
 // ======= INIT =======
 loadFromStorage();
+// Convert any stage-list style hardcoded KO data into per-match maps
+applyStageLists();
 calcTotals();
 renderMatches();
 renderKnockout();
