@@ -780,7 +780,7 @@
 <header>
   <div class="header-top">
     <div>
-      <div class="header-title">VM 2026 Bet Trackerrr</div>
+      <div class="header-title">VM 2026 Bet Tracker</div>
       <div class="header-subtitle">Canada · Mexico · USA &nbsp;·&nbsp; Bet Tracker</div>
     </div>
     <div class="header-badge">⚽ Group Stage Starts Jun 11</div>
@@ -946,6 +946,20 @@
       <div class="chart-title">Points per gruppe</div>
       <div style="position: relative; height: 240px;">
   <canvas id="groupChart" role="img" aria-label="Søjlediagram over point per gruppe for Christoffer, Viggo og Oscar">Ingen data endnu.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Knockout-point per runde</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#90caf9"></span> 1/16 (2pt)</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#42a5f5"></span> 1/8 (3pt)</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1e88e5"></span> QF (4pt)</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1565c0"></span> SF (5pt)</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#c9922a"></span> Final (8pt)</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#e63946"></span> Vinder (10pt)</span>
+      </div>
+      <div style="position: relative; height: 280px;">
+        <canvas id="koChart" role="img" aria-label="Stablet søjlediagram over knockout-point per spiller per runde">Ingen data endnu.</canvas>
       </div>
     </div>
   </div>
@@ -2690,6 +2704,7 @@ function savePredictions() {
 // ======= CHARTS =======
 let progressChartInstance = null;
 let groupChartInstance = null;
+let koChartInstance = null;
 
 function renderCharts() {
   // Progress chart
@@ -2784,6 +2799,42 @@ function renderCharts() {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true, ticks: { stepSize: 5 }, grid: { color: 'rgba(0,0,0,0.05)' } } }
+    }
+  });
+
+  // KO breakdown chart
+  const koStages = ['r32', 'r16', 'qf', 'sf', 'final', 'winner'];
+  const koStageLabels = { r32: '1/16', r16: '1/8', qf: 'QF', sf: 'SF', final: 'Final', winner: 'Vinder' };
+  const koStageColors = { r32: '#90caf9', r16: '#42a5f5', qf: '#1e88e5', sf: '#1565c0', final: '#c9922a', winner: '#e63946' };
+  const koPlayerLabels = PLAYERS.map(p => lineNameMap[p] || p);
+
+  const koDatasets = koStages.map(stage => {
+    const stageResults = Array.isArray(HARD_KO_STAGE_RESULTS[stage]) ? HARD_KO_STAGE_RESULTS[stage].filter(Boolean) : [];
+    const offSet = new Set(stageResults);
+    const data = PLAYERS.map(p => {
+      const stagePreds = HARD_KO_STAGE_PREDS[p] || {};
+      const predicted = Array.isArray(stagePreds[stage]) ? stagePreds[stage].filter(Boolean) : [];
+      if (stage === 'winner') {
+        return (predicted[0] && stageResults[0] && predicted[0] === stageResults[0]) ? PTS.winner : 0;
+      }
+      const hits = predicted.reduce((acc, t) => acc + (offSet.has(t) ? 1 : 0), 0);
+      return hits * (PTS[stage] || 0);
+    });
+    return { label: koStageLabels[stage], data, backgroundColor: koStageColors[stage] };
+  });
+
+  if (koChartInstance) koChartInstance.destroy();
+  const ctx3 = document.getElementById('koChart').getContext('2d');
+  koChartInstance = new Chart(ctx3, {
+    type: 'bar',
+    data: { labels: koPlayerLabels, datasets: koDatasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true, beginAtZero: true, ticks: { stepSize: 2 }, grid: { color: 'rgba(0,0,0,0.05)' } }
+      }
     }
   });
 }
