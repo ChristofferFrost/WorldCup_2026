@@ -939,7 +939,7 @@
         <span class="legend-item"><span class="legend-dot" style="background:#e63946"></span> Karl-Emil</span>
       </div>
       <div style="position: relative; height: 280px;">
-  <canvas id="progressChart" role="img" aria-label="Linjediagram over Christoffer, Viggo og Oscars kumulative point over tid">Ingen data endnu.</canvas>
+  <canvas id="progressChart" role="img" aria-label="Linjediagram over alle spilleres kumulative point over tid">Ingen data endnu.</canvas>
       </div>
     </div>
     <div class="chart-card">
@@ -2715,15 +2715,33 @@ function renderCharts() {
 
   if (progressChartInstance) progressChartInstance.destroy();
   const ctx1 = document.getElementById('progressChart').getContext('2d');
+  const lineColorMap = {
+    frost:     { border: '#1a7c45', bg: 'rgba(26,124,69,0.08)' },
+    viggo:     { border: '#1a4c8c', bg: 'rgba(26,76,140,0.08)' },
+    oscar:     { border: '#6a1a8c', bg: 'rgba(106,26,140,0.08)' },
+    axel:      { border: '#2a9d8f', bg: 'rgba(42,157,143,0.08)' },
+    alma:      { border: '#f08a5d', bg: 'rgba(240,138,93,0.08)' },
+    flemming:  { border: '#8d3df0', bg: 'rgba(141,61,240,0.08)' },
+    samuel:    { border: '#d42f6a', bg: 'rgba(212,47,106,0.08)' },
+    helms:     { border: '#2b6cff', bg: 'rgba(43,108,255,0.08)' },
+    lygum:     { border: '#00a896', bg: 'rgba(0,168,150,0.08)' },
+    karlemil:  { border: '#e63946', bg: 'rgba(230,57,70,0.08)' },
+  };
+  const lineNameMap = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil' };
+  const lineDatasets = PLAYERS.map(p => ({
+    label: lineNameMap[p] || p,
+    data: chartData[p] && chartData[p].length ? chartData[p] : [0],
+    borderColor: (lineColorMap[p] || {}).border || '#999',
+    backgroundColor: (lineColorMap[p] || {}).bg || 'rgba(153,153,153,0.08)',
+    pointRadius: 3,
+    tension: 0.3,
+    fill: false,
+  }));
   progressChartInstance = new Chart(ctx1, {
     type: 'line',
     data: {
       labels: labels.length ? labels : ['Ingen data'],
-      datasets: [
-  { label: 'Christoffer', data: chartData.frost.length ? chartData.frost : [0], borderColor: '#1a7c45', backgroundColor: 'rgba(26,124,69,0.08)', pointRadius: 3, tension: 0.3, fill: true },
-        { label: 'Viggo', data: chartData.viggo.length ? chartData.viggo : [0], borderColor: '#1a4c8c', backgroundColor: 'rgba(26,76,140,0.08)', pointRadius: 3, tension: 0.3, fill: true },
-        { label: 'Oscar', data: chartData.oscar.length ? chartData.oscar : [0], borderColor: '#6a1a8c', backgroundColor: 'rgba(106,26,140,0.08)', pointRadius: 3, tension: 0.3, fill: true },
-      ]
+      datasets: lineDatasets,
     },
     options: {
       responsive: true, maintainAspectRatio: false,
