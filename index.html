@@ -330,6 +330,10 @@
     margin-bottom: 1rem;
   }
 
+  /* center the stage headers above the stage lists */
+  .knockout-round { margin-bottom: 2rem; text-align: center; }
+  .round-title { display: inline-block; text-align: center; width: auto; }
+
   /* Stage list layout: each stage is a slim card with a vertical list of slots */
   .knockout-stage-list {
     display: grid;
@@ -348,7 +352,36 @@
     box-shadow: 0 6px 16px rgba(12,18,14,0.03);
     font-size: 0.95rem;
   }
-  .knockout-stage-list .stage-team.hit { border-color: rgba(26,124,69,0.14); box-shadow: 0 8px 20px rgba(22,92,56,0.04); background: linear-gradient(180deg, rgba(234,249,237,1), #fff); }
+  /* stronger green highlight for correct picks */
+  .knockout-stage-list .stage-team.hit {
+    border-color: rgba(26,124,69,0.28);
+    box-shadow: 0 12px 34px rgba(22,92,56,0.08);
+    background: linear-gradient(180deg, rgba(216,249,216,1), #f0fff0);
+    color: var(--green-dark);
+    position: relative;
+    overflow: visible;
+  }
+  /* subtle green accent stripe on the left */
+  .knockout-stage-list .stage-team.hit::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 50%; transform: translateY(-50%);
+    width: 4px; height: 60%; border-radius: 2px;
+    background: linear-gradient(180deg, var(--green), var(--green-dark));
+    opacity: 0.95;
+  }
+  .knockout-stage-list .stage-team.hit .team-name {
+    color: var(--green-dark);
+    font-weight: 800;
+  }
+  /* checkmark to the right */
+  .knockout-stage-list .stage-team.hit .team-name::after {
+    content: ' ✓';
+    color: var(--green-dark);
+    font-weight: 700;
+    margin-left: 8px;
+    opacity: 0.95;
+  }
   .stage-team .team-index {
     font-family: 'Bebas Neue', sans-serif;
     color: var(--text-muted);
@@ -373,9 +406,29 @@
     .stage-team { padding: 10px; font-size: 0.9rem; }
   }
 
-  /* KO filter UI */
-  .ko-filter { max-width: calc(100% - 4rem); margin: 0.5rem auto 0.75rem; display:flex; justify-content:flex-end; }
-  .ko-filter select { padding:8px 12px; border-radius:8px; border:1px solid var(--gray-mid); font-size:0.95rem; background:white; }
+  /* KO filter UI - nice pill-style select */
+  .ko-filter { width:100%; display:flex; justify-content:flex-start; margin:0.75rem 0; margin-left:1.25rem; }
+  .ko-filter select {
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    padding: 12px 44px 12px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.06);
+    font-size: 1.05rem;
+    font-weight: 500;
+    background: white;
+    box-shadow: 0 8px 22px rgba(12,18,14,0.06);
+    cursor: pointer;
+    min-width: 220px;
+    max-width: calc(100% - 4rem);
+    text-align: left;
+    transition: box-shadow 0.15s, transform 0.08s;
+    /* custom caret using layered linear-gradients */
+    background-image: linear-gradient(45deg, transparent 50%, #222 50%), linear-gradient(135deg, #222 50%, transparent 50%);
+    background-position: calc(100% - 18px) center, calc(100% - 12px) center;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+  .ko-filter select:focus { outline: none; box-shadow: 0 10px 30px rgba(12,18,14,0.09); transform: translateY(-1px); }
 
   /* RULES section */
   .rules-card {
@@ -1893,8 +1946,8 @@ const HARD_PREDICTIONS = {
 // HARD_KO_STAGE_PREDS = { frost: { r32: ['TeamA',...16], r16: ['TeamA',...8], qf: [...4], sf: [...2], final: [...2], winner: ['TeamX'] }, ... }
 // HARD_KO_STAGE_RESULTS = { r32: [...16], r16: [...8], qf: [...4], sf: [...2], final: [...2], winner: ['TeamX'] }
 const HARD_KO_STAGE_PREDS = {
-  frost: {r32: ['Mexico','Tjekkiet', 'Schweiz', 'Bosnien', 'Canada', 'Brasilien', 'Marokko', 'Skotland', 'USA', 'Tyrkiet', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Japan', 'Belgien', 'Egypten', 'Iran', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Senegal', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'England', 'Kroatien', 'Ghana'], r16: [], qf: [], sf: [], final: [], winner: []}, 
-  viggo: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
+  frost: {r32: ['Mexico','Tjekkiet', 'Schweiz', 'Bosnien', 'Canada', 'Brasilien', 'Marokko', 'Skotland', 'USA', 'Tyrkiet', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Japan', 'Belgien', 'Egypten', 'Iran', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Senegal', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'England', 'Kroatien', 'Ghana'], r16: ['Tyskland', 'Frankrig', 'Tjekkiet', 'Holland', 'Columbia', 'Spanien', 'USA', 'Belgien', 'Brasilien', 'Norge', 'Mexico', 'England', 'Argentina', 'Tyrkiet', 'Schweiz', 'Portugal'], qf: ['Frankrig', 'Holland', 'Spanien', 'Belgien', 'Brasilien', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'Brasilien', 'Portugal'], final: ['Frankrig', 'Portugal'], winner: ['Portugal']}, 
+  viggo: {r32: ['Mexico','Sydkorea', 'Schweiz', 'Canada', 'Brasilien', 'Marokko', 'Skotland', 'USA', 'Tyrkiet', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Japan', 'Belgien', 'Egypten', 'New Zealand', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Senegal', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'DR Congo', 'England', 'Kroatien', 'Ghana'], r16: ['Tyskland', 'Frankrig', 'Sydkorea', 'Holland', 'Kroatien', 'Spanien', 'Senegal', 'Belgien', 'Brasilien', 'Norge', 'Mexico', 'England', 'Argentina', 'Tyrkiet', 'Schweiz', 'Portugal'], qf: ['Frankrig', 'Holland', 'Spanien', 'Belgien', 'Brasilien', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'England', 'Portugal'], final: ['Frankrig', 'Portugal'], winner: ['Frankrig']},
   oscar: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
   axel: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
   alma: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
@@ -1904,7 +1957,7 @@ const HARD_KO_STAGE_PREDS = {
   lygum: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
 };
 const HARD_KO_STAGE_RESULTS = {
-   r32: ['Denmark','Frankrig', 'Argentina'], r16: [], qf: [], sf: [], final: [], winner: []
+   r32: ['Denmark','Frankrig', 'Argentina', 'Elfenbenskysten'], r16: [], qf: [], sf: [], final: [], winner: []
 };
 
 // Convert stage arrays into per-match mapping (73..104). This is flexible: if you provide
@@ -2033,8 +2086,8 @@ let activeGroup = 'all';
 let predFilter = 'all';
 
 let K2_PREDS = {
-  frost:  { topScorer: ['Mbappe','Ozarzabal','Kane'], topAssist: ['Bruno Fernandes','Yamal','Messi'], goldenGlove: 'David Raya' },
-  viggo:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  frost:  { topScorer: ['Mbappe','Ozarzabal','Kane'], topAssist: ['Bruno F','Yamal','Messi'], goldenGlove: 'David Raya' },
+  viggo:  { topScorer: ['Mbappe','Kane','Ronaldo'], topAssist: ['Bruno F','Yamal','Messi'], goldenGlove: 'Maignan' },
   oscar:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
   axel:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
   alma:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
@@ -2043,7 +2096,7 @@ let K2_PREDS = {
   helms:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
   lygum:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
 };
-let K2_RESULTS = { scorers: ['benzema','Ronaldo','Mbappe'], assists: ['','',''], goldenGlove: '' };
+let K2_RESULTS = { scorers: ['benzema','Ronaldo','Mbappe'], assists: ['Messi','Yamal','Ronaldo'], goldenGlove: 'David Raya' };
 
 function loadFromStorage() {
   try {
@@ -2372,14 +2425,26 @@ function renderKnockout() {
     return Array(count).fill('');
   }
 
+  // helper: normalize team names for comparison (lowercase, trim, remove diacritics)
+  function normalizeName(n) {
+    if (!n) return '';
+    try {
+      return n.toString().toLowerCase().trim().normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[.,()\-–—]/g,'').replace(/\s+/g,' ');
+    } catch(e) {
+      return n.toString().toLowerCase().trim();
+    }
+  }
+
   stages.forEach(s => {
     const section = document.createElement('div');
     section.className = 'knockout-round';
     section.innerHTML = `<div class="round-title">${s.title}</div>`;
 
-    const listWrap = document.createElement('div');
-    listWrap.className = 'knockout-stage-list';
-    const official = getOfficialStageArray(s.key, s.count);
+  const listWrap = document.createElement('div');
+  listWrap.className = 'knockout-stage-list';
+  const official = getOfficialStageArray(s.key, s.count);
+  // Prepare a normalized set of official team names so matching is order-independent
+  const officialSet = new Set((official||[]).map(n => normalizeName(n)).filter(Boolean));
     // If viewing a specific player, pull their predictions for this stage
     const playerPreds = (view && view !== 'official' && view !== 'all') ? getPlayerStageArray(view, s.key, s.count) : null;
 
@@ -2392,9 +2457,12 @@ function renderKnockout() {
   if (view === 'official') displayName = offName || 'TBD';
       else displayName = predName || 'TBD';
       item.innerHTML = `<span class="team-index">${i+1}.</span> <span class="team-name">${displayName}</span>`;
-      // highlight if a player's pick matches the official
-      if (playerPreds && offName && predName && offName === predName) {
-        item.classList.add('hit');
+      // highlight if a player's pick exists anywhere in the official list (order-independent)
+      if (playerPreds && predName) {
+        const npred = normalizeName(predName);
+        if (npred && officialSet.has(npred)) {
+          item.classList.add('hit');
+        }
       }
       // no 'all' view; only player or official views supported
       listWrap.appendChild(item);
