@@ -43,6 +43,8 @@
     --lygum-bg: #e8fbf9;
     --karlemil: #e63946;
     --karlemil-bg: #fdeaea;
+    --mads: #f4a261;
+    --mads-bg: #fff3e8;
   }
 
   body {
@@ -308,6 +310,7 @@
   .pred-helms { background: var(--helms-bg); color: var(--helms); }
   .pred-lygum { background: var(--lygum-bg); color: var(--lygum); }
   .pred-karlemil { background: var(--karlemil-bg); color: var(--karlemil); }
+  .pred-mads { background: var(--mads-bg); color: var(--mads); }
   .pred-label { font-size: 0.68rem; font-weight: 300; opacity: 0.7; display: block; margin-bottom: 1px; }
   .pred-col {
     display: flex;
@@ -867,6 +870,14 @@
         <span class="score-pill" id="karlemil-wdl">0 1X2</span>
       </div>
     </div>
+    <div class="player-score">
+      <div class="player-name">Mads</div>
+      <div class="player-pts"><span id="mads-total">0</span><span class="pts-label">pts</span></div>
+      <div class="score-breakdown">
+        <span class="score-pill" id="mads-correct">0 eksakte</span>
+        <span class="score-pill" id="mads-wdl">0 1X2</span>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -938,6 +949,7 @@
         <span class="legend-item"><span class="legend-dot" style="background:#2b6cff"></span> Helms</span>
         <span class="legend-item"><span class="legend-dot" style="background:#00a896"></span> Lygum</span>
         <span class="legend-item"><span class="legend-dot" style="background:#e63946"></span> Karl-Emil</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#f4a261"></span> Mads</span>
       </div>
       <div style="position: relative; height: 280px;">
   <canvas id="progressChart" role="img" aria-label="Linjediagram over alle spilleres kumulative point over tid">Ingen data endnu.</canvas>
@@ -1211,7 +1223,7 @@ const MATCHES = [
 // Predictions: which team each person predicted to win each match
 // Based on the spreadsheet data - all players start from the same base winner picks
 const PREDICTIONS = {
-  frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {}, karlemil: {}
+  frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {}, karlemil: {}, mads: {}
 };
 
 // From the spreadsheet: the "winner" column (team name) for each match
@@ -1251,6 +1263,7 @@ MATCHES.forEach(m => {
   PREDICTIONS.helms = PREDICTIONS.helms || {};
   PREDICTIONS.lygum = PREDICTIONS.lygum || {};
   PREDICTIONS.karlemil = PREDICTIONS.karlemil || {};
+  PREDICTIONS.mads = PREDICTIONS.mads || {};
   PREDICTIONS.axel[m.id] = BASE_PREDS[m.id] || m.team1;
   PREDICTIONS.alma[m.id] = BASE_PREDS[m.id] || m.team1;
   PREDICTIONS.flemming[m.id] = BASE_PREDS[m.id] || m.team1;
@@ -1258,6 +1271,7 @@ MATCHES.forEach(m => {
   PREDICTIONS.helms[m.id] = BASE_PREDS[m.id] || m.team1;
   PREDICTIONS.lygum[m.id] = BASE_PREDS[m.id] || m.team1;
   PREDICTIONS.karlemil[m.id] = BASE_PREDS[m.id] || m.team1;
+  PREDICTIONS.mads[m.id] = BASE_PREDS[m.id] || m.team1;
 });
 
 // ======= STATE =======
@@ -2060,6 +2074,7 @@ const HARD_KO_STAGE_PREDS = {
   helms: {r32: ['Mexico','Tjekkiet', 'Sydkorea', 'Schweiz', 'Canada', 'Brasilien', 'Marokko', 'USA', 'Tyrkiet', 'Paraguay', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Japan', 'Belgien', 'Egypten', 'Iran', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Senegal', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'England', 'Kroatien', 'Ghana'], r16: ['Tyskland', 'Frankrig', 'Schweiz', 'Holland', 'Columbia', 'Spanien', 'USA', 'Belgien', 'Brasilien', 'Ecuador', 'Mexico', 'England', 'Argentina', 'Tyrkiet', 'Canada', 'Portugal'], qf: ['Frankrig', 'Holland', 'Spanien', 'Belgien', 'Brasilien', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'England', 'Argentina'], final: ['Spanien', 'England'], winner: ['Spanien']},
   lygum: {r32: ['Mexico','Tjekkiet', 'Sydafrika', 'Schweiz', 'Bosnien', 'Canada', 'Brasilien', 'Skotland', 'USA', 'Tyrkiet', 'Paraguay', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Japan', 'Belgien', 'Egypten', 'New Zealand', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Senegal', 'Argentina', 'Østrig', 'Jordan', 'Portugal', 'Columbia', 'DR Congo', 'England', 'Kroatien'], r16: ['Tyskland', 'Frankrig', 'Mexico', 'Brasilien', 'Kroatien', 'Spanien', 'Tyrkiet', 'Belgien', 'Skotland', 'Ecuador', 'Tjekkiet', 'England', 'Argentina', 'Paraguay', 'Schweiz', 'Portugal'], qf: ['Frankrig', 'Brasilien', 'Spanien', 'Belgien', 'Ecuador', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'England', 'Argentina'], final: ['Spanien', 'England'], winner: ['Spanien']},
   karlemil: {r32: ['Mexico','Sydkorea', 'Sydafrika', 'Schweiz', 'Qatar', 'Canada', 'Brasilien', 'Marokko', 'Skotland', 'USA', 'Tyrkiet', 'Paraguay', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Belgien', 'Egypten', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'DR Congo', 'England', 'Kroatien', 'Ghana'], r16: ['Tyskland', 'Frankrig', 'Sydkorea', 'Marokko', 'Columbia', 'Spanien', 'Tyrkiet', 'Belgien', 'Brasilien', 'Norge', 'Mexico', 'England', 'Argentina', 'Egypten', 'Schweiz', 'Portugal'], qf: ['Frankrig', 'Marokko', 'Spanien', 'Belgien', 'Brasilien', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'England', 'Argentina'], final: ['Spanien', 'England'], winner: ['England']},
+  mads: {r32: [], r16: [], qf: [], sf: [], final: [], winner: []},
 };
 const HARD_KO_STAGE_RESULTS = {
    r32: [], r16: [], qf: [], sf: [], final: [], winner: ['Ikke Danmark']
@@ -2186,7 +2201,7 @@ function computeKOTotals() {
 }
 
 
-let SCORE_PREDS = { frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {}, karlemil: {} };
+let SCORE_PREDS = { frost: {}, viggo: {}, oscar: {}, axel: {}, alma: {}, flemming: {}, samuel: {}, helms: {}, lygum: {}, karlemil: {}, mads: {} };
 let activeGroup = 'all';
 let predFilter = 'all';
 
@@ -2201,6 +2216,8 @@ let K2_PREDS = {
   helms:  { topScorer: ['Mbappe','Kane','Oyarzabal'], topAssist: ['Yamal','Olise','Bruno F'], goldenGlove: 'David Raya' },
   lygum:  { topScorer: ['Olise','Oyarzabal','Kane'], topAssist: ['Kante','Pedri','Bruno F'], goldenGlove: 'David Raya' },
   karlemil:  { topScorer: ['Mbappe','Kane','Messi'], topAssist: ['Bruno F','De Bruyne','Yamal'], goldenGlove: 'E. Martinez' },
+  mads:  { topScorer: ['','',''], topAssist: ['','',''], goldenGlove: '' },
+  alexander: { topScorer: ['Mbappe','Kane','Haaland'], topAssist: ['Yamal','Cherki','Olise'], goldenGlove: 'Allison' },
 };
 let K2_RESULTS = { scorers: ['','',''], assists: ['','',''], goldenGlove: '' };
 
@@ -2284,10 +2301,11 @@ function saveToStorage() {
 // ======= SCORING =======
 const PTS = { exact: 3, wdl: 1, r32: 2, r16: 3, qf: 4, sf: 5, final: 8, winner: 10 };
 // Add new players here (identifiers used in storage and keys)
-const PLAYERS = ['frost', 'viggo', 'oscar', 'axel', 'alma', 'flemming', 'samuel', 'helms', 'lygum', 'karlemil'];
+const PLAYERS = ['frost', 'viggo', 'oscar', 'axel', 'alma', 'flemming', 'samuel', 'helms', 'lygum', 'karlemil', 'mads'];
+const K2_PLAYERS = [...PLAYERS, 'alexander'];
 
 // Human-friendly display names for players (used in labels). Keep keys as ids.
-const DISPLAY_NAMES = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil' };
+const DISPLAY_NAMES = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil', mads: 'Mads' };
 
 function scoreMatch(result, prediction) {
   if (!result || result.s1 === '' || result.s2 === '') return 0;
@@ -2698,7 +2716,7 @@ function savePredictions() {
   saveToStorage();
   calcTotals();
   renderMatches();
-  const PLAYER_NAMES = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil' };
+  const PLAYER_NAMES = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil', mads: 'Mads' };
   alert('✅ Bud gemt for ' + (PLAYER_NAMES[player] || player) + '!');
 }
 
@@ -2709,9 +2727,9 @@ let koChartInstance = null;
 
 function renderCharts() {
   // Progress chart
-  const chartData = { frost: [], viggo: [], oscar: [], axel: [], alma: [], flemming: [], samuel: [], helms: [], lygum: [], karlemil: [] };
+  const chartData = { frost: [], viggo: [], oscar: [], axel: [], alma: [], flemming: [], samuel: [], helms: [], lygum: [], karlemil: [], mads: [] };
   const labels = [];
-  const sums = { frost: 0, viggo: 0, oscar: 0, axel: 0, alma: 0, flemming: 0, samuel: 0, helms: 0, lygum: 0, karlemil: 0 };
+  const sums = { frost: 0, viggo: 0, oscar: 0, axel: 0, alma: 0, flemming: 0, samuel: 0, helms: 0, lygum: 0, karlemil: 0, mads: 0 };
 
   MATCHES.forEach((m, i) => {
     const r = RESULTS[m.id];
@@ -2743,8 +2761,9 @@ function renderCharts() {
     helms:     { border: '#2b6cff', bg: 'rgba(43,108,255,0.08)' },
     lygum:     { border: '#00a896', bg: 'rgba(0,168,150,0.08)' },
     karlemil:  { border: '#e63946', bg: 'rgba(230,57,70,0.08)' },
+    mads:      { border: '#f4a261', bg: 'rgba(244,162,97,0.08)' },
   };
-  const lineNameMap = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil' };
+  const lineNameMap = { frost: 'Christoffer', viggo: 'Viggo', oscar: 'Oscar', axel: 'Axel', alma: 'Alma', flemming: 'Flemming', samuel: 'Samuel', helms: 'Helms', lygum: 'Lygum', karlemil: 'Karl-Emil', mads: 'Mads' };
   const lineDatasets = PLAYERS.map(p => ({
     label: lineNameMap[p] || p,
     data: chartData[p] && chartData[p].length ? chartData[p] : [0],
@@ -2788,7 +2807,7 @@ function renderCharts() {
   if (groupChartInstance) groupChartInstance.destroy();
   const ctx2 = document.getElementById('groupChart').getContext('2d');
   // Build datasets dynamically for all players so new players are included
-  const colorMap = { frost:'#1a7c45', viggo:'#1a4c8c', oscar:'#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896', karlemil:'#e63946' };
+  const colorMap = { frost:'#1a7c45', viggo:'#1a4c8c', oscar:'#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896', karlemil:'#e63946', mads:'#f4a261' };
   const datasets = PLAYERS.map(p => ({ label: p.charAt(0).toUpperCase() + p.slice(1), data: groupPts[p], backgroundColor: colorMap[p] || '#999' }));
   groupChartInstance = new Chart(ctx2, {
     type: 'bar',
@@ -2844,8 +2863,8 @@ function renderCharts() {
 function renderK2() {
   const cont = document.getElementById('k2-content');
   if (!cont) return;
-  const COLORS = { frost: '#1a7c45', viggo: '#1a4c8c', oscar: '#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896', karlemil:'#e63946' };
-  const NAMES  = { frost: 'CHRISTOFFER', viggo: 'VIGGO', oscar: 'OSCAR', axel:'AXEL', alma:'ALMA', flemming:'FLEMMING', samuel:'SAMUEL', helms:'HELMS', lygum:'LYGUM', karlemil:'KARL-EMIL' };
+  const COLORS = { frost: '#1a7c45', viggo: '#1a4c8c', oscar: '#6a1a8c', axel:'#2a9d8f', alma:'#f08a5d', flemming:'#8d3df0', samuel:'#d42f6a', helms:'#2b6cff', lygum:'#00a896', karlemil:'#e63946', mads:'#f4a261', alexander:'#0ea5e9' };
+  const NAMES  = { frost: 'CHRISTOFFER', viggo: 'VIGGO', oscar: 'OSCAR', axel:'AXEL', alma:'ALMA', flemming:'FLEMMING', samuel:'SAMUEL', helms:'HELMS', lygum:'LYGUM', karlemil:'KARL-EMIL', mads:'MADS', alexander:'ALEXANDER' };
 
   // Returns { total, slots: [{pred, pts}] } for scorer/assist, or { total, slots } for goldenGlove
   function getScore(player, cat) {
@@ -2874,8 +2893,8 @@ function renderK2() {
 
   // Initialize totals for all players
   const totals = {};
-  PLAYERS.forEach(p => totals[p] = 0);
-  PLAYERS.forEach(p => ['topScorer','topAssist','goldenGlove'].forEach(cat => {
+  K2_PLAYERS.forEach(p => totals[p] = 0);
+  K2_PLAYERS.forEach(p => ['topScorer','topAssist','goldenGlove'].forEach(cat => {
     const s = getScore(p, cat);
     if (s && s.total) totals[p] += s.total;
   }));
@@ -2934,7 +2953,7 @@ function renderK2() {
 
   // Score summary (use fixed-size stat boxes that can wrap)
   html += '<div class="rules-card"><div class="rules-title">K2 Point</div><div class="k2-summary">';
-  PLAYERS.forEach(p => {
+  K2_PLAYERS.forEach(p => {
     html += '<div class="k2-stat">';
     html += '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.1em;margin-bottom:6px;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>';
     html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:2.5rem;line-height:1;color:' + COLORS[p] + ';">' + totals[p] + '</div>';
@@ -2945,14 +2964,14 @@ function renderK2() {
 
   // Predictions + results table
   // Use dynamic grid columns so the K2 table scales to the number of players
-  const cols = '120px repeat(' + PLAYERS.length + ',1fr) 100px';
+  const cols = '120px repeat(' + K2_PLAYERS.length + ',1fr) 100px';
   html += '<div class="rules-card"><div class="rules-title">Bud &amp; resultater</div><div style="overflow-x:auto;"><div style="min-width:460px;">';
   html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:8px 0;border-bottom:2px solid var(--gray-mid);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;"><div></div>';
-  PLAYERS.forEach(p => { html += '<div style="text-align:center;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>'; });
+  K2_PLAYERS.forEach(p => { html += '<div style="text-align:center;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>'; });
   html += '<div style="text-align:center;color:var(--text-muted);">OFFICIELT</div></div>';
   rows.forEach(row => {
     html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:start;"><div style="font-size:0.88rem;font-weight:500;padding-top:4px;">' + row.label + '</div>';
-    PLAYERS.forEach(p => { html += predCell(p, row.key); });
+    K2_PLAYERS.forEach(p => { html += predCell(p, row.key); });
     html += resultCell(row) + '</div>';
   });
   html += '</div></div></div>';
@@ -3025,7 +3044,7 @@ function saveK2Preds() {
   };
   saveToStorage();
   renderK2();
-  const PNAMES = { frost:'Christoffer', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum', karlemil:'Karl-Emil' };
+  const PNAMES = { frost:'Christoffer', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum', karlemil:'Karl-Emil', mads:'Mads' };
   alert('\u2705 K2 bud gemt for ' + (PNAMES[player] || player) + '!');
 }
 
@@ -3063,7 +3082,7 @@ function populateK2PlayerSelect() {
   const sel = document.getElementById('k2-player');
   if (!sel) return;
   sel.innerHTML = '';
-  const PN = { frost:'Christoffer', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum', karlemil:'Karl-Emil' };
+  const PN = { frost:'Christoffer', viggo:'Viggo', oscar:'Oscar', axel:'Axel', alma:'Alma', flemming:'Flemming', samuel:'Samuel', helms:'Helms', lygum:'Lygum', karlemil:'Karl-Emil', mads:'Mads' };
   PLAYERS.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p;
