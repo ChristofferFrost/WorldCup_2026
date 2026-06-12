@@ -2521,63 +2521,77 @@ function renderMatches() {
   const filterBar = document.getElementById('group-filters');
 
   // Build filter buttons
-  filterBar.innerHTML = '<button class="filter-btn '+(activeGroup==='all'?'active':'')+'" onclick="setGroupFilter(\'all\', this)">Alle</button>';
+  const today = new Date().toISOString().split('T')[0];
+  const todayMatches = MATCHES.filter(m => m.date === today);
+  const todayLabel = todayMatches.length ? `Dagens kampe (${todayMatches.length})` : 'Dagens kampe';
+  filterBar.innerHTML = `<button class="filter-btn ${activeGroup==='today'?'active':''}" onclick="setGroupFilter('today', this)">${todayLabel}</button>`;
+  filterBar.innerHTML += '<button class="filter-btn '+(activeGroup==='all'?'active':'')+'" onclick="setGroupFilter(\'all\', this)">Alle</button>';
   GROUPS.forEach(g => {
     filterBar.innerHTML += `<button class="filter-btn ${activeGroup===g?'active':''}" onclick="setGroupFilter('${g}', this)">Gruppe ${g}</button>`;
   });
 
-  const groups = activeGroup === 'all' ? GROUPS : [activeGroup];
   container.innerHTML = '';
 
+  if (activeGroup === 'today') {
+    const block = document.createElement('div');
+    block.className = 'group-block';
+    block.innerHTML = `<div class="group-header">Dagens kampe <span class="group-tag">${today}</span></div>`;
+    if (todayMatches.length === 0) {
+      block.innerHTML += `<div style="padding:1.5rem 20px; color:var(--text-muted); font-size:0.9rem;">Ingen kampe i dag.</div>`;
+    } else {
+      todayMatches.forEach(m => addMatchRow(m, block));
+    }
+    container.appendChild(block);
+    return;
+  }
+
+  const groups = activeGroup === 'all' ? GROUPS : [activeGroup];
   groups.forEach(g => {
     const groupMatches = MATCHES.filter(m => m.group === g);
     const block = document.createElement('div');
     block.className = 'group-block';
     block.innerHTML = `<div class="group-header">Gruppe ${g} <span class="group-tag">${GROUP_TEAMS[g].join(' · ')}</span></div>`;
 
-    groupMatches.forEach(m => {
-      const r = RESULTS[m.id];
-      const hasResult = r && r.s1 !== '' && r.s2 !== '';
-      const status = getMatchStatus(m);
-      const dotClass = status === 'done' ? 'dot-done' : status === 'live' ? 'dot-live' : 'dot-upcoming';
-
-      const getDisplay = (p) => {
-        const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
-        return (sc.s1 !== undefined && sc.s1 !== '') ? `${sc.s1}–${sc.s2}` : PREDICTIONS[p][m.id];
-      };
-      const displays = PLAYERS.map(p => getDisplay(p));
-      const firstDisp = displays[0];
-      const allSame = PLAYERS.every((p, idx) => displays[idx] === firstDisp);
-      const row = document.createElement('div');
-      row.className = 'match-row';
-      row.innerHTML = `
-        <div class="match-no" title="${m.date}"><span class="status-dot ${dotClass}"></span></div>
-        <div class="team-name right">${m.team1}</div>
-        <div class="result-box ${hasResult?'has-result':''}">
-          <span>${hasResult?r.s1:'–'}</span>
-          <span class="score-sep">:</span>
-          <span>${hasResult?r.s2:'–'}</span>
-        </div>
-        <div class="team-name">${m.team2}</div>
-        <div class="preds-wrapper">
-          ${PLAYERS.map(p => {
-            const display = getDisplay(p);
-            const hit = getPredHitStatus(p, m);
-            const hitClass = hit === 'exact' ? 'pred-hit-exact' : hit === 'wdl' ? 'pred-hit-wdl' : hit === 'miss' ? 'pred-hit-miss' : '';
-            return `
-            <div class="pred-col" style="min-width:70px;">
-              <span class="pred-label">${(DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase()+p.slice(1)))}</span>
-              <span class="pred-box pred-${p} ${hitClass}">${display}</span>
-            </div>`;
-          }).join('')}
-        </div>
-        <div class="match-date">${m.date.slice(5)}</div>
-      `;
-      block.appendChild(row);
-    });
-
+    groupMatches.forEach(m => addMatchRow(m, block));
     container.appendChild(block);
   });
+}
+
+function addMatchRow(m, block) {
+  const r = RESULTS[m.id];
+  const hasResult = r && r.s1 !== '' && r.s2 !== '';
+  const status = getMatchStatus(m);
+  const dotClass = status === 'done' ? 'dot-done' : status === 'live' ? 'dot-live' : 'dot-upcoming';
+  const getDisplay = (p) => {
+    const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
+    return (sc.s1 !== undefined && sc.s1 !== '') ? `${sc.s1}–${sc.s2}` : PREDICTIONS[p][m.id];
+  };
+  const row = document.createElement('div');
+  row.className = 'match-row';
+  row.innerHTML = `
+    <div class="match-no" title="${m.date}"><span class="status-dot ${dotClass}"></span></div>
+    <div class="team-name right">${m.team1}</div>
+    <div class="result-box ${hasResult?'has-result':''}">
+      <span>${hasResult?r.s1:'–'}</span>
+      <span class="score-sep">:</span>
+      <span>${hasResult?r.s2:'–'}</span>
+    </div>
+    <div class="team-name">${m.team2}</div>
+    <div class="preds-wrapper">
+      ${PLAYERS.map(p => {
+        const display = getDisplay(p);
+        const hit = getPredHitStatus(p, m);
+        const hitClass = hit === 'exact' ? 'pred-hit-exact' : hit === 'wdl' ? 'pred-hit-wdl' : hit === 'miss' ? 'pred-hit-miss' : '';
+        return `
+        <div class="pred-col" style="min-width:70px;">
+          <span class="pred-label">${(DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase()+p.slice(1)))}</span>
+          <span class="pred-box pred-${p} ${hitClass}">${display}</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="match-date">${m.date.slice(5)}</div>
+  `;
+  block.appendChild(row);
 }
 
 function setGroupFilter(g, btn) {
