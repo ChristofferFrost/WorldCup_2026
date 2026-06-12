@@ -837,6 +837,17 @@
   .k2-stat { flex: 0 0 110px; text-align:center; padding:14px 8px; background:var(--gray); border-radius:8px; box-sizing:border-box; }
   @media (max-width:900px) { .k2-stat { flex: 0 0 90px; } }
   @media (max-width:600px) { .k2-stat { flex: 0 0 48%; margin-bottom:8px; } }
+
+  /* K2 mobile "Bud & resultater" card layout */
+  .k2-cat-block { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .k2-cat-block:last-child { border-bottom: none; }
+  .k2-cat-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.08em; color: var(--green-dark); margin-bottom: 8px; }
+  .k2-player-row { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(0,0,0,0.04); }
+  .k2-player-row:last-child { border-bottom: none; }
+  .k2-player-tag { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.07em; min-width: 68px; flex-shrink: 0; padding-top: 3px; }
+  .k2-player-preds { flex: 1; }
+  .k2-official-result { margin-top: 8px; padding: 7px 10px; background: var(--gray); border-radius: 8px; }
+  .k2-official-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
 </style>
 </head>
 <body>
@@ -3039,11 +3050,13 @@ function renderK2() {
     { key: 'goldenGlove',label: '&#129354; Golden Glove', results: null },
   ];
 
-  function predCell(player, cat) {
+  function predCell(player, cat, align) {
     const score = getScore(player, cat);
     const slots = score ? score.slots : [];
     const hasResult = cat === 'goldenGlove' ? !!K2_RESULTS.goldenGlove : !!K2_RESULTS.scorers[0] || !!K2_RESULTS.assists[0];
-    let html = '<div style="text-align:center;">';
+    const ta = align || 'center';
+    const jc = align === 'left' ? 'flex-start' : 'center';
+    let html = '<div style="text-align:' + ta + ';">';
     if (cat === 'goldenGlove') {
       // Show each player's golden glove pick directly so it's visible even
       // when the official result isn't set yet.
@@ -3058,7 +3071,7 @@ function renderK2() {
       preds.forEach((name, i) => {
         const sl = slots[i] || { pred: name, pts: null };
         const bg = hasResult && name && sl.pts !== null ? (sl.pts > 0 ? 'background:rgba(26,124,69,0.12);' : 'background:rgba(192,57,43,0.08);') : '';
-        html += '<div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:3px;">';
+        html += '<div style="display:flex;align-items:center;justify-content:' + jc + ';gap:4px;margin-bottom:3px;">';
         html += '<span style="font-size:0.6rem;color:var(--text-muted);width:12px;">' + (i+1) + '.</span>';
         html += '<span style="display:inline-block;padding:2px 7px;border-radius:5px;font-size:0.78rem;' + bg + (name ? '' : 'color:var(--text-muted);') + '">' + (name || '&#8211;') + '</span>';
         if (hasResult && name && sl.pts !== null) html += '<span style="font-size:0.6rem;font-weight:700;color:' + (sl.pts > 0 ? '#1a7c45' : '#c0392b') + ';">' + (sl.pts > 0 ? '+' + sl.pts : '&#10007;') + '</span>';
@@ -3096,19 +3109,47 @@ function renderK2() {
   html += '</div></div>';
   // keep k2-full-bleed open so the following 'Bud & resultater' card is inside it
 
-  // Predictions + results table
-  // Use dynamic grid columns so the K2 table scales to the number of players
-  const cols = '120px repeat(' + K2_PLAYERS.length + ',1fr) 100px';
-  html += '<div class="rules-card"><div class="rules-title">Bud &amp; resultater</div><div style="overflow-x:auto;"><div style="min-width:460px;">';
-  html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:8px 0;border-bottom:2px solid var(--gray-mid);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;"><div></div>';
-  K2_PLAYERS.forEach(p => { html += '<div style="text-align:center;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>'; });
-  html += '<div style="text-align:center;color:var(--text-muted);">OFFICIELT</div></div>';
-  rows.forEach(row => {
-    html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:start;"><div style="font-size:0.88rem;font-weight:500;padding-top:4px;">' + row.label + '</div>';
-    K2_PLAYERS.forEach(p => { html += predCell(p, row.key); });
-    html += resultCell(row) + '</div>';
-  });
-  html += '</div></div></div>';
+  // Predictions + results — mobile card layout vs desktop grid table
+  const isMobile = window.innerWidth <= 600;
+  if (isMobile) {
+    html += '<div class="rules-card"><div class="rules-title">Bud &amp; resultater</div>';
+    rows.forEach(row => {
+      html += '<div class="k2-cat-block">';
+      html += '<div class="k2-cat-label">' + row.label + '</div>';
+      K2_PLAYERS.forEach(p => {
+        html += '<div class="k2-player-row">';
+        html += '<div class="k2-player-tag" style="color:' + COLORS[p] + ';">' + NAMES[p] + '</div>';
+        html += '<div class="k2-player-preds">' + predCell(p, row.key, 'left') + '</div>';
+        html += '</div>';
+      });
+      html += '<div class="k2-official-result"><div class="k2-official-label">Officielt resultat</div>';
+      if (row.key === 'goldenGlove') {
+        html += '<span style="font-size:0.85rem;">' + (K2_RESULTS.goldenGlove || '<span style="color:var(--text-muted);">Ikke afgjort endnu</span>') + '</span>';
+      } else {
+        const r = (row.results || []).filter(Boolean);
+        if (r.length) {
+          html += '<span style="font-size:0.82rem;">' + r.map((n, i) => '<span style="font-size:0.65rem;color:var(--text-muted);">' + (i+1) + '.</span> ' + n).join('&nbsp;&nbsp;') + '</span>';
+        } else {
+          html += '<span style="font-size:0.82rem;color:var(--text-muted);">Ikke afgjort endnu</span>';
+        }
+      }
+      html += '</div></div>';
+    });
+    html += '</div>';
+  } else {
+    // Desktop: wide grid table
+    const cols = '120px repeat(' + K2_PLAYERS.length + ',1fr) 100px';
+    html += '<div class="rules-card"><div class="rules-title">Bud &amp; resultater</div><div style="overflow-x:auto;"><div style="min-width:460px;">';
+    html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:8px 0;border-bottom:2px solid var(--gray-mid);font-size:0.68rem;font-weight:700;letter-spacing:0.08em;"><div></div>';
+    K2_PLAYERS.forEach(p => { html += '<div style="text-align:center;color:' + COLORS[p] + ';">' + NAMES[p] + '</div>'; });
+    html += '<div style="text-align:center;color:var(--text-muted);">OFFICIELT</div></div>';
+    rows.forEach(row => {
+      html += '<div style="display:grid;grid-template-columns:' + cols + ';gap:8px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.05);align-items:start;"><div style="font-size:0.88rem;font-weight:500;padding-top:4px;">' + row.label + '</div>';
+      K2_PLAYERS.forEach(p => { html += predCell(p, row.key); });
+      html += resultCell(row) + '</div>';
+    });
+    html += '</div></div></div>';
+  }
 
   // Rules (keep inside the k2-full-bleed wrapper so the rules card matches the other K2 cards)
   html += '<div class="rules-card"><div class="rules-title">Regler \u2013 Konkurrence 2</div>';
