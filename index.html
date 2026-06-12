@@ -848,6 +848,34 @@
   .k2-player-preds { flex: 1; }
   .k2-official-result { margin-top: 8px; padding: 7px 10px; background: var(--gray); border-radius: 8px; }
   .k2-official-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+
+  /* Prediction hit highlights */
+  .pred-box.pred-hit-exact { background: #1a7c45 !important; color: white !important; }
+  .pred-box.pred-hit-wdl   { background: #c9922a !important; color: white !important; }
+  .pred-box.pred-hit-miss  { background: #c0392b !important; color: white !important; }
+
+  /* Color legend above group filter */
+  .pred-legend {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    justify-content: center;
+  }
+  .pred-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+  .pred-legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
@@ -982,6 +1010,11 @@
     <h2>Resultater & forudsigelser</h2>
   </div>
   <div class="full-bleed">
+    <div class="pred-legend">
+      <span class="pred-legend-item"><span class="pred-legend-dot" style="background:#1a7c45"></span> Korrekt resultat (3 pt)</span>
+      <span class="pred-legend-item"><span class="pred-legend-dot" style="background:#c9922a"></span> Korrekt udfald 1X2 (1 pt)</span>
+      <span class="pred-legend-item"><span class="pred-legend-dot" style="background:#c0392b"></span> Forkert (0 pt)</span>
+    </div>
     <div class="filter-bar" id="group-filters"></div>
     <div id="matches-container"></div>
   </div>
@@ -2483,6 +2516,18 @@ function getPredictedOutcome(player, matchId) {
   return null;
 }
 
+function getPredHitStatus(p, m) {
+  const r = RESULTS[m.id];
+  if (!r || r.s1 === '' || r.s2 === '') return null;
+  const s1 = parseInt(r.s1), s2 = parseInt(r.s2);
+  const predScore = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
+  const hasScore = predScore.s1 !== undefined && predScore.s1 !== '';
+  if (hasScore && parseInt(predScore.s1) === s1 && parseInt(predScore.s2) === s2) return 'exact';
+  const actualOutcome = s1 > s2 ? 'home' : s2 > s1 ? 'away' : 'draw';
+  if (getPredictedOutcome(p, m.id) === actualOutcome) return 'wdl';
+  return 'miss';
+}
+
 function calcTotals() {
   const totals = {};
   const exact = {};
@@ -2585,12 +2630,16 @@ function renderMatches() {
         </div>
         <div class="team-name">${m.team2}</div>
         <div class="preds-wrapper">
-          ${PLAYERS.map(p => `
+          ${PLAYERS.map(p => {
+            const display = getDisplay(p);
+            const hit = getPredHitStatus(p, m);
+            const hitClass = hit === 'exact' ? 'pred-hit-exact' : hit === 'wdl' ? 'pred-hit-wdl' : hit === 'miss' ? 'pred-hit-miss' : '';
+            return `
             <div class="pred-col" style="min-width:70px;">
               <span class="pred-label">${(DISPLAY_NAMES[p] || (p.charAt(0).toUpperCase()+p.slice(1)))}</span>
-              <span class="pred-box pred-${p}">${getDisplay(p)}</span>
-            </div>
-          `).join('')}
+              <span class="pred-box pred-${p} ${hitClass}">${display}</span>
+            </div>`;
+          }).join('')}
         </div>
         <div class="match-date">${m.date.slice(5)}</div>
       `;
