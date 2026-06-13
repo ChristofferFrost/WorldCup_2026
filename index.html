@@ -2523,8 +2523,11 @@ function renderMatches() {
   // Build filter buttons
   const today = new Date().toISOString().split('T')[0];
   const todayMatches = MATCHES.filter(m => m.date === today);
+  const playedMatches = MATCHES.filter(m => { const r = RESULTS[m.id]; return r && r.s1 !== '' && r.s2 !== ''; });
   const todayLabel = todayMatches.length ? `Dagens kampe (${todayMatches.length})` : 'Dagens kampe';
+  const playedLabel = `Spillede kampe (${playedMatches.length})`;
   filterBar.innerHTML = `<button class="filter-btn ${activeGroup==='today'?'active':''}" onclick="setGroupFilter('today', this)">${todayLabel}</button>`;
+  filterBar.innerHTML += `<button class="filter-btn ${activeGroup==='played'?'active':''}" onclick="setGroupFilter('played', this)">${playedLabel}</button>`;
   filterBar.innerHTML += '<button class="filter-btn '+(activeGroup==='all'?'active':'')+'" onclick="setGroupFilter(\'all\', this)">Alle</button>';
   GROUPS.forEach(g => {
     filterBar.innerHTML += `<button class="filter-btn ${activeGroup===g?'active':''}" onclick="setGroupFilter('${g}', this)">Gruppe ${g}</button>`;
@@ -2540,6 +2543,19 @@ function renderMatches() {
       block.innerHTML += `<div style="padding:1.5rem 20px; color:var(--text-muted); font-size:0.9rem;">Ingen kampe i dag.</div>`;
     } else {
       todayMatches.forEach(m => addMatchRow(m, block));
+    }
+    container.appendChild(block);
+    return;
+  }
+
+  if (activeGroup === 'played') {
+    const block = document.createElement('div');
+    block.className = 'group-block';
+    block.innerHTML = `<div class="group-header">Spillede kampe <span class="group-tag">${playedMatches.length} kampe</span></div>`;
+    if (playedMatches.length === 0) {
+      block.innerHTML += `<div style="padding:1.5rem 20px; color:var(--text-muted); font-size:0.9rem;">Ingen spillede kampe endnu.</div>`;
+    } else {
+      playedMatches.forEach(m => addMatchRow(m, block));
     }
     container.appendChild(block);
     return;
