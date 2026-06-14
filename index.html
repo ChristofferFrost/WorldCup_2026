@@ -2523,7 +2523,12 @@ function renderMatches() {
   // Build filter buttons
   const today = new Date().toISOString().split('T')[0];
   const todayMatches = MATCHES.filter(m => m.date === today);
-  const playedMatches = MATCHES.filter(m => { const r = RESULTS[m.id]; return r && r.s1 !== '' && r.s2 !== ''; });
+  const playedMatches = MATCHES.filter(m => { const r = RESULTS[m.id]; return r && r.s1 !== '' && r.s2 !== ''; })
+    .sort((a, b) => {
+      if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+      if (a.group !== b.group) return a.group < b.group ? -1 : 1;
+      return MATCHES.indexOf(a) - MATCHES.indexOf(b);
+    });
   const todayLabel = todayMatches.length ? `Dagens kampe (${todayMatches.length})` : 'Dagens kampe';
   const playedLabel = `Spillede kampe (${playedMatches.length})`;
   filterBar.innerHTML = `<button class="filter-btn ${activeGroup==='today'?'active':''}" onclick="setGroupFilter('today', this)">${todayLabel}</button>`;
