@@ -2994,8 +2994,27 @@ function renderCharts() {
       }
       legendEl.querySelectorAll('.legend-item').forEach(el => el.classList.remove('solo','dimmed'));
       allBtn.classList.add('solo');
+      noneBtn.classList.remove('solo');
     });
     legendEl.appendChild(allBtn);
+
+    const noneBtn = document.createElement('span');
+    noneBtn.className = 'legend-item clickable';
+    noneBtn.style.color = 'var(--text-muted)';
+    noneBtn.textContent = 'Ingen';
+    noneBtn.addEventListener('click', () => {
+      soloPlayer = null;
+      if (progressChartInstance) {
+        progressChartInstance.data.datasets.forEach(ds => { ds.hidden = true; });
+        progressChartInstance.update();
+      }
+      legendEl.querySelectorAll('.legend-item').forEach(el => el.classList.remove('solo'));
+      legendEl.querySelectorAll('.legend-item').forEach(el => el.classList.add('dimmed'));
+      noneBtn.classList.remove('dimmed');
+      noneBtn.classList.add('solo');
+      allBtn.classList.remove('solo');
+    });
+    legendEl.appendChild(noneBtn);
 
     PLAYERS.forEach((p, idx) => {
       const color = (lineColorMap[p] || {}).border || '#999';
