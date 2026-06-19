@@ -572,6 +572,22 @@
     align-items: center;
     gap: 6px;
   }
+  .legend-item.clickable {
+    cursor: pointer;
+    padding: 3px 8px 3px 6px;
+    border-radius: 20px;
+    border: 1.5px solid transparent;
+    transition: opacity 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .legend-item.clickable:hover { opacity: 0.8; }
+  .legend-item.clickable.solo {
+    border-color: currentColor;
+    font-weight: 600;
+  }
+  .legend-item.clickable.dimmed {
+    opacity: 0.28;
+  }
   .legend-dot {
     width: 10px; height: 10px;
     border-radius: 2px;
@@ -967,19 +983,7 @@
   <div class="full-bleed">
     <div class="chart-card">
       <div class="chart-title">Samlede point</div>
-      <div class="legend">
-  <span class="legend-item"><span class="legend-dot" style="background:#1a7c45"></span> Christoffer</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#1a4c8c"></span> Viggo</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#6a1a8c"></span> Oscar</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#2a9d8f"></span> Axel</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#f08a5d"></span> Alma</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#8d3df0"></span> Flemming</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#d42f6a"></span> Samuel</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#2b6cff"></span> Helms</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#00a896"></span> Lygum</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#e63946"></span> Karl-Emil</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#f4a261"></span> Mads</span>
-      </div>
+      <div id="progress-legend" class="legend"></div>
       <div style="position: relative; height: 280px;">
   <canvas id="progressChart" role="img" aria-label="Linjediagram over alle spilleres kumulative point over tid">Ingen data endnu.</canvas>
       </div>
@@ -2903,25 +2907,31 @@ let groupChartInstance = null;
 let koChartInstance = null;
 
 function renderCharts() {
-  // Progress chart
-  const chartData = { frost: [], viggo: [], oscar: [], axel: [], alma: [], flemming: [], samuel: [], helms: [], lygum: [], karlemil: [], mads: [] };
-  const labels = [];
-  const sums = { frost: 0, viggo: 0, oscar: 0, axel: 0, alma: 0, flemming: 0, samuel: 0, helms: 0, lygum: 0, karlemil: 0, mads: 0 };
+  // Progress chart — iterate matches in date order
+  const sortedMatches = [...MATCHES].sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    if (a.group !== b.group) return a.group < b.group ? -1 : 1;
+    return MATCHES.indexOf(a) - MATCHES.indexOf(b);
+  });
 
-  MATCHES.forEach((m, i) => {
+  const chartData = {};
+  const labels = [];
+  const sums = {};
+  PLAYERS.forEach(p => { chartData[p] = []; sums[p] = 0; });
+
+  sortedMatches.forEach(m => {
     const r = RESULTS[m.id];
     if (r && r.s1 !== '' && r.s2 !== '') {
       const s1 = parseInt(r.s1), s2 = parseInt(r.s2);
-      const outcome = s1 > s2 ? m.team1 : s2 > s1 ? m.team2 : 'draw';
-        PLAYERS.forEach(p => {
-          const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
-          const isEx = sc.s1 !== undefined && sc.s1 !== '' && parseInt(sc.s1) === s1 && parseInt(sc.s2) === s2;
-        const actualOutcome = s1 > s2 ? 'home' : s2 > s1 ? 'away' : 'draw';
+      const actualOutcome = s1 > s2 ? 'home' : s2 > s1 ? 'away' : 'draw';
+      PLAYERS.forEach(p => {
+        const sc = (SCORE_PREDS[p] && SCORE_PREDS[p][m.id]) || {};
+        const isEx = sc.s1 !== undefined && sc.s1 !== '' && parseInt(sc.s1) === s1 && parseInt(sc.s2) === s2;
         if (isEx) sums[p] += PTS.exact;
         else if (getPredictedOutcome(p, m.id) === actualOutcome) sums[p] += PTS.wdl;
-          chartData[p].push(sums[p]);
-        });
-      labels.push('K'+m.no);
+        chartData[p].push(sums[p]);
+      });
+      labels.push(m.date.slice(5) + ' ' + m.team1.slice(0,3) + '-' + m.team2.slice(0,3));
     }
   });
 
@@ -2958,10 +2968,59 @@ function renderCharts() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { ticks: { maxTicksLimit: 10 } } }
+      plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { ticks: { maxTicksLimit: 12, maxRotation: 45 } }
+      }
     }
   });
+
+  // Build interactive legend
+  const legendEl = document.getElementById('progress-legend');
+  if (legendEl) {
+    legendEl.innerHTML = '';
+    let soloPlayer = null;
+
+    const allBtn = document.createElement('span');
+    allBtn.className = 'legend-item clickable solo';
+    allBtn.style.color = 'var(--text-muted)';
+    allBtn.textContent = 'Alle';
+    allBtn.addEventListener('click', () => {
+      soloPlayer = null;
+      if (progressChartInstance) {
+        progressChartInstance.data.datasets.forEach(ds => { ds.hidden = false; });
+        progressChartInstance.update();
+      }
+      legendEl.querySelectorAll('.legend-item').forEach(el => el.classList.remove('solo','dimmed'));
+      allBtn.classList.add('solo');
+    });
+    legendEl.appendChild(allBtn);
+
+    PLAYERS.forEach((p, idx) => {
+      const color = (lineColorMap[p] || {}).border || '#999';
+      const name = lineNameMap[p] || p;
+      const item = document.createElement('span');
+      item.className = 'legend-item clickable solo'; // start active
+      item.style.color = color;
+      item.innerHTML = `<span class="legend-dot" style="background:${color}"></span>${name}`;
+      item.addEventListener('click', () => {
+        const chart = progressChartInstance;
+        if (!chart) return;
+        const ds = chart.data.datasets[idx];
+        const nowHidden = !ds.hidden;
+        ds.hidden = nowHidden;
+        item.classList.toggle('solo', !nowHidden);
+        item.classList.toggle('dimmed', nowHidden);
+        // update Alle button: active only when all are visible
+        const anyHidden = chart.data.datasets.some(d => d.hidden);
+        allBtn.classList.toggle('solo', !anyHidden);
+        allBtn.classList.toggle('dimmed', anyHidden);
+        chart.update();
+      });
+      legendEl.appendChild(item);
+    });
+  }
 
   // Group chart
   const groupLabels = GROUPS.map(g => 'Gr. ' + g);
