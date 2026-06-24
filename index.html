@@ -848,6 +848,66 @@
   .k2-full-bleed .rules-card > div > div[style*="display:flex"] > div {
     min-width: 84px;
   }
+  /* Announcement popup */
+  .announcement-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease;
+  }
+  .announcement-overlay.hidden { display: none; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .announcement-box {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 2rem 1.5rem;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .announcement-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .announcement-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    color: var(--green-dark);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+  .announcement-body {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .announcement-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .announcement-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .announcement-btn:hover { background: var(--green-dark); }
+  .announcement-btn.secondary {
+    background: var(--gray);
+    color: var(--text-muted);
+  }
+  .announcement-btn.secondary:hover { background: var(--gray-mid); color: var(--text); }
+
   /* K2 summary layout helpers */
   .k2-summary { display:flex; gap:8px; padding:8px 0; flex-wrap:wrap; align-items:stretch; }
   .k2-stat { flex: 0 0 110px; text-align:center; padding:14px 8px; background:var(--gray); border-radius:8px; box-sizing:border-box; }
@@ -973,6 +1033,19 @@
 </div>
 
 
+
+<!-- ANNOUNCEMENT POPUP -->
+<div id="announcement-overlay" class="announcement-overlay hidden">
+  <div class="announcement-box">
+    <div class="announcement-icon">🏆</div>
+    <div class="announcement-title">Knockout-fasen er i gang!</div>
+    <div class="announcement-body">Knockout holdene begynder nu at tælle med — gå til Knockout for at se alles forudsigelser.</div>
+    <div class="announcement-actions">
+      <button class="announcement-btn" onclick="closeAnnouncement(); showSection('knockout', document.querySelector('.nav-btn:nth-child(2)'))">Gå til Knockout</button>
+      <button class="announcement-btn secondary" onclick="closeAnnouncement()">Luk</button>
+    </div>
+  </div>
+</div>
 
 <!-- CHART SECTION -->
 <div id="chart-section" class="section">
@@ -2202,7 +2275,7 @@ const HARD_KO_STAGE_PREDS = {
   mads: {r32: ['Mexico','Tjekkiet', 'Sydkorea', 'Schweiz', 'Canada', 'Brasilien', 'Marokko', 'Skotland', 'USA', 'Tyrkiet', 'Paraguay', 'Tyskland', 'Ecuador', 'Elfenbenskysten', 'Holland', 'Sverige', 'Japan', 'Belgien', 'Egypten', 'Spanien', 'Uruguay', 'Frankrig', 'Norge', 'Senegal', 'Argentina', 'Østrig', 'Algeriet', 'Portugal', 'Columbia', 'England', 'Kroatien', 'Ghana'], r16: ['Tyskland', 'Frankrig', 'Sydkorea', 'Holland', 'Kroatien', 'Spanien', 'Tyrkiet', 'Belgien', 'Brasilien', 'Ecuador', 'Marokko', 'England', 'Argentina', 'Egypten', 'Schweiz', 'Portugal'], qf: ['Frankrig', 'Holland', 'Spanien', 'Tyrkiet', 'Brasilien', 'England', 'Argentina', 'Portugal'], sf: ['Frankrig', 'Spanien', 'Brasilien', 'Portugal'], final: ['Frankrig', 'Portugal'], winner: ['Frankrig']},
 };
 const HARD_KO_STAGE_RESULTS = {
-   r32: [], r16: [], qf: [], sf: [], final: [], winner: ['Ikke Danmark']
+   r32: ['Schweiz', 'Canada'], r16: [], qf: [], sf: [], final: [], winner: ['Ikke Danmark']
 };
 
 // Convert stage arrays into per-match mapping (73..104). This is flexible: if you provide
@@ -3352,6 +3425,14 @@ function saveK2Results() {
   alert('\u2705 K2 resultater gemt!');
 }
 
+// ======= ANNOUNCEMENT =======
+function closeAnnouncement() {
+  document.getElementById('announcement-overlay').classList.add('hidden');
+}
+function showAnnouncement() {
+  document.getElementById('announcement-overlay').classList.remove('hidden');
+}
+
 // ======= INIT =======
 loadFromStorage();
 // Convert any stage-list style hardcoded KO data into per-match maps
@@ -3361,6 +3442,9 @@ renderMatches();
 renderKnockout();
 renderK2();
 renderK2();
+
+// Show announcement on load
+showAnnouncement();
 
 // Populate dynamic selects
 function populateK2PlayerSelect() {
